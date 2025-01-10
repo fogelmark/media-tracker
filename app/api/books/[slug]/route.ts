@@ -2,17 +2,39 @@ import Book from "@/models/book";
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> } // Explicitly typing as Promise
+) {
+  try {
+    await connectToDatabase();
+
+    const { slug } = await params; // Extract the book slug from the URL
+
+    const book = await Book.findOne({ slug });
+
+    if (!book) {
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Book found", book });
+  } catch (error: any) {
+    console.error(error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> } // Explicitly typing as Promise
+  { params }: { params: Promise<{ slug: string }> } // Explicitly typing as Promise
 ) {
   try {
     await connectToDatabase();
 
     // Await the params to handle any potential async behavior
-    const { id } = await params;
+    const { slug } = await params;
 
-    const deletedBook = await Book.findByIdAndDelete(id);
+    const deletedBook = await Book.findOneAndDelete({ slug });
 
     if (!deletedBook) {
       return NextResponse.json({ error: 'Book not found' }, { status: 404 });
@@ -28,15 +50,15 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> } // Explicitly typing as Promise
+  { params }: { params: Promise<{ slug: string }> } // Explicitly typing as Promise
 ) {
   try {
     await connectToDatabase();
 
-    const { id } = await params; // Extract the book ID from the URL
+    const { slug } = await params; // Extract the book slug from the URL
     const updates = await request.json(); // Get the updated fields from the request body
 
-    const updatedBook = await Book.findByIdAndUpdate(id, updates, {
+    const updatedBook = await Book.findOneAndUpdate({ slug }, updates, {
       new: true,
       runValidators: true,
     });
