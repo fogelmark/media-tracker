@@ -1,12 +1,17 @@
 import Book from "@/models/book";
 import { connectToDatabase } from "@/lib/mongodb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> } // Explicitly typing as Promise
+) {
   try {
     await connectToDatabase();
 
-    const { id } = params;
+    // Await the params to handle any potential async behavior
+    const { id } = await params;
+
     const deletedBook = await Book.findByIdAndDelete(id);
 
     if (!deletedBook) {
@@ -20,20 +25,30 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> } // Explicitly typing as Promise
+) {
   try {
     await connectToDatabase();
 
-    const { id } = params; // Extract the book ID from the URL
+    const { id } = await params; // Extract the book ID from the URL
     const updates = await request.json(); // Get the updated fields from the request body
 
-    const updatedBook = await Book.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    const updatedBook = await Book.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updatedBook) {
-      return NextResponse.json({ error: 'Book not found' }, { status: 404 });
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: 'Book updated successfully', updatedBook });
+    return NextResponse.json({
+      message: "Book updated successfully",
+      updatedBook,
+    });
   } catch (error: any) {
     console.error(error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });

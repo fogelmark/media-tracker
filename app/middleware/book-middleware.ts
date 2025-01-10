@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import slugify from 'slugify';
 
 // Middleware function to validate the rating based on status
 export function validateBookStatus(schema: Schema) {
@@ -15,6 +16,18 @@ export function validateBookStatus(schema: Schema) {
         new Error('Rating can only be set if the book status is "Completed".')
       );
     }
+    next();
+  });
+}
+
+export function generateSlug(schema: Schema) {
+  schema.pre('save', function (next) {
+    const doc: any = this; // Ensure correct typing for `this`
+
+    if (doc.title && doc.author) {
+      doc.slug = slugify(`${doc.title} ${doc.author}`, { lower: true, strict: true });
+    }
+
     next();
   });
 }

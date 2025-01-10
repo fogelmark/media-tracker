@@ -1,10 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { validateBookStatus } from '@/app/middleware/book-middleware';
+import { generateSlug, validateBookStatus } from '@/app/middleware/book-middleware';
 
 // Define the Book interface
 export interface IBook extends Document {
   title: string;
   author: string;
+  slug: string;
   genre: string;
   status: 'Not Started' | 'In Progress' | 'Completed';
   language: 'Swedish' | 'English';
@@ -24,6 +25,10 @@ const bookSchema: Schema<IBook> = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+  },
+  slug: {
+    type: String,
+    unique: true,
   },
   genre: {
     type: String,
@@ -68,6 +73,7 @@ const bookSchema: Schema<IBook> = new mongoose.Schema({
 });
 
 validateBookStatus(bookSchema);
+generateSlug(bookSchema);
 
 // Create the Book model
 const Book: Model<IBook> =

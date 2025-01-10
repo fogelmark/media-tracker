@@ -1,6 +1,6 @@
 import Book from "@/models/book";
 import { connectToDatabase } from "@/lib/mongodb";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 // Fetch all books
 export async function GET() {
@@ -14,7 +14,7 @@ export async function GET() {
 }
 
 // Add a new book
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
     const body = await request.json();
