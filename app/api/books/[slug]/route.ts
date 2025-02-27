@@ -50,29 +50,35 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> } // Explicitly typing as Promise
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     await connectToDatabase();
 
-    const { slug } = await params; // Extract the book slug from the URL
-    const updates = await request.json(); // Get the updated fields from the request body
+    const { slug } = await params;
+    const updates = await request.json();
 
-    const updatedBook = await Book.findOneAndUpdate({ slug }, updates, {
-      new: true,
-      runValidators: true,
-    });
+    // Fetch the book first
+    const book = await Book.findOne({ slug });
 
-    if (!updatedBook) {
+    if (!book) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
+    // Apply updates manually
+    Object.assign(book, updates);
+
+    // Save the document (triggers validation & middleware)
+    await book.save();
+
     return NextResponse.json({
       message: "Book updated successfully",
-      updatedBook,
+      updatedBook: book,
     });
   } catch (error: any) {
     console.error(error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+

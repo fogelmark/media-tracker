@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { generateSlug, validateBookStatus } from '@/app/middleware/book-middleware';
 
-// Define the Book interface
-export interface IBook extends Document {
+export interface Book extends Document {
+  _id: string;
   title: string;
   author: string;
   slug: string;
@@ -14,8 +14,7 @@ export interface IBook extends Document {
   createdAt: Date;
 }
 
-// Define the Book schema
-const bookSchema: Schema<IBook> = new mongoose.Schema({
+const bookSchema: Schema<Book> = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -75,8 +74,11 @@ const bookSchema: Schema<IBook> = new mongoose.Schema({
 validateBookStatus(bookSchema);
 generateSlug(bookSchema);
 
-// Create the Book model
-const Book: Model<IBook> =
-  mongoose.models.book || mongoose.model<IBook>('book', bookSchema);
+const Book: Model<Book> =
+  mongoose.models.book || mongoose.model<Book>('book', bookSchema);
+
+// frontend-friendly interface  
+// export type BookClient = Omit<Book, 'createdAt'>
+
 
 export default Book;
