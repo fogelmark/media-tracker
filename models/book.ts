@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 import { generateSlug, validateBookStatus } from '@/app/middleware/book-middleware';
 
 export interface Book extends Document {
-  _id: string;
+  id: string;
   title: string;
   author: string;
   slug: string;
