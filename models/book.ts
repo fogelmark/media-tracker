@@ -5,12 +5,14 @@ export interface Book extends Document {
   id: string;
   title: string;
   author: string;
+  cover: string;
   slug: string;
   genre: string;
-  status: 'Not Started' | 'In Progress' | 'Completed';
+  status: 'Want To Read' | 'In Progress' | 'Completed';
   language: 'Swedish' | 'English';
   pages?: number;
   rating?: number | null;
+  first_published?: number;
   createdAt: Date;
 }
 
@@ -24,6 +26,10 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+  },
+  cover: {
+    type: String,
+    required: true,
   },
   slug: {
     type: String,
@@ -41,14 +47,25 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
       'History',
       'Self-Help',
       'Thriller',
+      'Horror',
+      'Romance',
+      'Poetry',
+      "Crime",
+      'Dystopian',
+      'Science',
+      'Sexuality',
+      'Drama',
+      'Comedy',
+      'Philosophy',
+      'Religion',
       'Other',
     ],
     required: true,
   },
   status: {
     type: String,
-    enum: ['Not Started', 'In Progress', 'Completed'],
-    default: 'Not Started',
+    enum: ['Want To Read', 'In Progress', 'Completed'],
+    default: 'Want To Read',
   },
   language: {
     type: String,
@@ -64,6 +81,10 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
     min: 1,
     max: 5,
     default: null,
+  },
+  first_published: {
+    type: Number,
+    required: false
   },
   createdAt: {
     type: Date,

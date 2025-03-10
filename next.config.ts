@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "covers.openlibrary.org",
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ]
   }
 };
