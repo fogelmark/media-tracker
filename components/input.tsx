@@ -4,6 +4,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: string;
   options?: string[];
+  genres?: { _id: string; name: string }[];
   ratings?: number[];
   firstPublished?: number;
   className?: string;
@@ -13,11 +14,15 @@ export default function Input({
   label,
   name,
   options,
+  genres,
   ratings,
   type = "text",
   className,
   ...props
 }: InputProps) {
+
+  console.log(genres);
+
   if (type === "radio" && options) {
     return (
       <div className="flex flex-col gap-2">
@@ -43,25 +48,26 @@ export default function Input({
     );
   }
 
-  if (type === "checkbox" && options) {
+  // Här går vi igenom options (som är en array av genre-objekt) och använder _id som värde och name som visningstext
+  if (type === "checkbox" && genres) {
     return (
       <div className="flex flex-col gap-2">
         <span className="uppercase font-semibold text-xs">{label}</span>
         <div className="flex flex-wrap gap-2">
-          {options.map((option) => (
-            <label key={option} className="cursor-pointer">
+          {genres.map((genre) => (
+            <label key={genre._id} className="cursor-pointer">
               <input
                 type="checkbox"
                 name={name}
-                value={option}
+                value={genre._id}
                 className="sr-only peer"
                 checked={
-                  Array.isArray(props.value) && props.value.includes(option)
+                  Array.isArray(props.value) && props.value.includes(genre._id)
                 }
                 onChange={props.onChange}
               />
               <div className="px-4 py-2 select-none hover:bg-slate-600 rounded-md text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}{" "}
               </div>
             </label>
           ))}
@@ -79,7 +85,10 @@ export default function Input({
         id={name}
         name={name}
         type={type}
-        className={cn("py-2 px-4 bg-slate-50 rounded border border-slate-300 text-black", className)}
+        className={cn(
+          "py-2 px-4 bg-slate-50 rounded border border-slate-300 text-black",
+          className
+        )}
         {...props}
       />
     </div>

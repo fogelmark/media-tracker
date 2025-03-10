@@ -24,30 +24,19 @@ export default function Page() {
   const [language, setLanguage] = useState("");
   const [rating, setRating] = useState<number | null>(null);
   const [firstPublishedYear, setFirstPublishedYear] = useState("");
+  const [genres, setGenres] = useState<{ _id: string; name: string }[]>([]);
 
-  const genres = [
-    "Fiction",
-    "Non-Fiction",
-    "Mystery",
-    "Fantasy",
-    "Science Fiction",
-    "Biography",
-    "History",
-    "Self-Help",
-    "Thriller",
-    "Horror",
-    "Romance",
-    "Poetry",
-    "Crime",
-    "Dystopian",
-    "Science",
-    "Sexuality",
-    "Drama",
-    "Comedy",
-    "Philosophy",
-    "Religion",
-    "Other",
-  ];
+  const fetchGenres = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/genres");
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch genres");
+      }
+      setGenres(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchBooks = async (searchQuery: string) => {
     if (!searchQuery) return;
@@ -72,6 +61,10 @@ export default function Page() {
   };
 
   useEffect(() => {
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (query) fetchBooks(query);
     }, 1000);
@@ -91,9 +84,7 @@ export default function Page() {
   return (
     <div className="flex">
       <div className="flex flex-col px-20 py-10 w-1/2">
-        <CldUploadWidget
-          uploadPreset="next-media"
-        >
+        <CldUploadWidget uploadPreset="next-media">
           {({ open }) => {
             return (
               <button
@@ -212,13 +203,14 @@ export default function Page() {
             label="genre"
             name="genre"
             type="checkbox"
-            options={genres}
+            genres={genres} // Detta kommer vara en array av objekt
             onChange={(e) => {
               const { value, checked } = e.target;
-              setGenre((prev) =>
-                checked
-                  ? [...prev, value]
-                  : prev.filter((genre) => genre !== value)
+              setGenre(
+                (prev) =>
+                  checked
+                    ? [...prev, value] // Lägg till id:t i listan när checkbox är ikryssad
+                    : prev.filter((genre) => genre !== value) // Ta bort id:t från listan när checkbox avmarkeras
               );
             }}
             value={genre}
