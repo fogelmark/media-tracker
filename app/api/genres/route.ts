@@ -1,32 +1,30 @@
-import Book from "@/models/book";
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse, NextRequest } from "next/server";
-import mongoose from "mongoose";  
+import { NextApiRequest, NextApiResponse } from 'next';
+import Genre from "@/models/genre";
 
-// Fetch all books
+// Fetch all genres
 export async function GET() {
   try {
     await connectToDatabase();
-    const books = await Book.find();
-    return NextResponse.json(books);
+    const genres = await Genre.find();
+    return NextResponse.json(genres);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// Add a new book
+// Add a new genre
 export async function POST(request: NextRequest) {
   try {
     await connectToDatabase();
     const body = await request.json();
 
-    body.genre = body.genre.map((id: string) => new mongoose.Types.ObjectId(id));
-    const newBook = new Book(body);
-    await newBook.save();
+    const newGenre = new Genre(body);
+    await newGenre.save();
 
-    return NextResponse.json(newBook, { status: 201 });
+    return NextResponse.json(newGenre, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

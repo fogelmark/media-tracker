@@ -1,5 +1,8 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
-import { generateSlug, validateBookStatus } from '@/app/middleware/book-middleware';
+import mongoose, { Schema, Document, Model } from "mongoose";
+import {
+  generateSlug,
+  validateBookStatus,
+} from "@/app/middleware/book-middleware";
 
 export interface Book extends Document {
   id: string;
@@ -7,9 +10,9 @@ export interface Book extends Document {
   author: string;
   cover: string;
   slug: string;
-  genre: string;
-  status: 'Want To Read' | 'In Progress' | 'Completed';
-  language: 'Swedish' | 'English';
+  genre: mongoose.Types.ObjectId[];
+  status: "Want To Read" | "In Progress" | "Completed";
+  language: "Swedish" | "English";
   pages?: number;
   rating?: number | null;
   first_published?: number;
@@ -29,48 +32,21 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   },
   cover: {
     type: String,
-    required: true,
   },
   slug: {
     type: String,
     unique: true,
   },
-  genre: {
-    type: String,
-    enum: [
-      'Fiction',
-      'Non-Fiction',
-      'Mystery',
-      'Fantasy',
-      'Science Fiction',
-      'Biography',
-      'History',
-      'Self-Help',
-      'Thriller',
-      'Horror',
-      'Romance',
-      'Poetry',
-      "Crime",
-      'Dystopian',
-      'Science',
-      'Sexuality',
-      'Drama',
-      'Comedy',
-      'Philosophy',
-      'Religion',
-      'Other',
-    ],
-    required: true,
-  },
+  genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre", required: true }],
   status: {
     type: String,
-    enum: ['Want To Read', 'In Progress', 'Completed'],
-    default: 'Want To Read',
+    enum: ["Want To Read", "In Progress", "Completed"],
+    default: "Want To Read",
   },
   language: {
     type: String,
-    enum: ['Swedish', 'English'],
-    default: 'Swedish',
+    enum: ["Swedish", "English"],
+    default: "Swedish",
   },
   pages: {
     type: Number,
@@ -84,7 +60,7 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   },
   first_published: {
     type: Number,
-    required: false
+    required: false,
   },
   createdAt: {
     type: Date,
@@ -96,10 +72,9 @@ validateBookStatus(bookSchema);
 generateSlug(bookSchema);
 
 const Book: Model<Book> =
-  mongoose.models.book || mongoose.model<Book>('book', bookSchema);
+  mongoose.models.book || mongoose.model<Book>("book", bookSchema);
 
-// frontend-friendly interface  
+// frontend-friendly interface
 // export type BookClient = Omit<Book, 'createdAt'>
-
 
 export default Book;
