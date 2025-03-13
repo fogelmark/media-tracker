@@ -7,8 +7,32 @@ import { useState, useEffect } from "react";
 import book_placeholder from "@/public/images/book-placeholder.png";
 import Image from "next/image";
 import Input from "@/components/input";
-import RatingSystem from "@/components/rating-system";
 import axios from "axios";
+
+interface FormData {
+  title: string;
+  author: string;
+  cover_id: string;
+  pages: number | string;
+  first_published: number | string;
+  status: string;
+  rating: number;
+  language: string;
+  genre: string[];
+  [key: string]: any;
+}
+
+const initState: FormData = {
+  title: "",
+  author: "",
+  cover_id: "",
+  pages: "",
+  first_published: "",
+  status: "Want To Read",
+  rating: 0,
+  language: "Swedish",
+  genre: [],
+};
 
 export default function Page() {
   const [query, setQuery] = useState("");
@@ -16,15 +40,32 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedBook, setSelectedBook] = useState([]);
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [pages, setPages] = useState("");
-  const [genre, setGenre] = useState<string[]>([]);
-  const [status, setStatus] = useState("Want To Read");
-  const [language, setLanguage] = useState("");
-  const [rating, setRating] = useState<number | null>(null);
-  const [firstPublishedYear, setFirstPublishedYear] = useState("");
   const [genres, setGenres] = useState<{ _id: string; name: string }[]>([]);
+  const [resource, setResource] = useState();
+  const [formData, setFormData] = useState(initState);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [bookCoverUrl, setBookCoverUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]:
+        type === "checkbox"
+          ? checked
+            ? [...(prevState[name] || []), value]
+            : prevState[name].filter((v: string) => v !== value)
+          : type === "number" || name === "rating"
+          ? Number(value) || ""
+          : value,
+    }));
+
+    setIsSuccess(false);
+  };
 
   const fetchGenres = async () => {
     try {
@@ -75,27 +116,56 @@ export default function Page() {
   const handleSelectedBook = (book: any) => {
     setBooks([]);
     setSelectedBook(book);
-    setTitle(book.title || "");
-    setAuthor(book.author_name?.join(", ") || "");
-    setPages(book.number_of_pages || "");
-    setFirstPublishedYear(book.first_publish_year || "");
+
+    setFormData((prev) => ({
+      ...prev,
+      title: book.title || "",
+      author: book.author_name?.join(", ") || "",
+      pages: book.number_of_pages || "",
+      first_published: book.first_published || "",
+    }));
   };
 
+  useEffect(() => {
+    if (formData.cover_id) {
+      setBookCoverUrl(
+        getCldImageUrl({
+          src: formData.cover_id,
+        })
+      );
+    }
+  }, [formData.cover_id]);
+
   return (
-    <div className="flex">
-      <div className="flex flex-col px-20 py-10 w-1/2">
-        <CldUploadWidget uploadPreset="next-media">
-          {({ open }) => {
-            return (
-              <button
-                className="px-5 py-3 bg-blue-500 max-w-[200px] rounded-md mb-4"
-                onClick={() => open()}
-              >
-                Upload an Image
-              </button>
-            );
+    <div className="flex justify-center">
+      <div className="flex flex-col px-4 md:w-2/3 lg:w-1/2 py-10 w-full">
+        {/* TODO - STYLE THE UPLOAD BUTTON. GET AN UPLOAD ICON */}
+        <CldUploadWidget
+          uploadPreset="next-media"
+          onSuccess={(result: any) => {
+            setFormData((prev) => ({
+              ...prev,
+              cover_id: result?.info?.public_id,
+            }));
           }}
+        >
+          {({ open }) => (
+            <button
+              className="px-5 py-3 bg-blue-500 max-w-[200px] rounded-md mb-4"
+              onClick={() => open()}
+              disabled={isUploading}
+            >
+              {isUploading ? "Uploading..." : "Upload an Image"}
+            </button>
+          )}
         </CldUploadWidget>
+
+        {bookCoverUrl && (
+          <div className="relative w-auto h-[263px] mb-4">
+            <Image src={bookCoverUrl} fill alt="Uploaded Image" />
+          </div>
+        )}
+
         <div className="flex flex-col gap-1">
           <label htmlFor="search" className="uppercase font-semibold text-xs">
             Search for a book
@@ -153,14 +223,14 @@ export default function Page() {
           <Input
             label="title"
             name="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={formData.title}
+            onChange={handleChange}
           />
           <Input
             label="author"
             name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            value={formData.author}
+            onChange={handleChange}
           />
           <div className="flex max gap-16 justify-between">
             <Input
@@ -168,16 +238,16 @@ export default function Page() {
               name="pages"
               type="number"
               className="w-full"
-              value={pages}
-              onChange={(e) => setPages(e.target.value)}
+              value={formData.pages}
+              onChange={handleChange}
             />
             <Input
               label="first published year"
-              name="first published year"
+              name="first_published"
               type="number"
               className="w-full"
-              value={firstPublishedYear}
-              onChange={(e) => setFirstPublishedYear(e.target.value)}
+              value={formData.first_published}
+              onChange={handleChange}
             />
           </div>
           <Input
@@ -185,35 +255,33 @@ export default function Page() {
             name="status"
             type="radio"
             options={["Want To Read", "In Progress", "Completed"]}
-            onChange={(e) => setStatus(e.target.value)}
-            value={status}
+            onChange={handleChange}
+            value={formData.status}
           />
-          {status === "Completed" && (
-            <RatingSystem name="rating" maxRating={5} />
+          {formData.status === "Completed" && (
+            <Input
+              label="rating"
+              name="rating"
+              type="rating"
+              value={formData.rating}
+              onChange={handleChange}
+            />
           )}
           <Input
             label="language"
             name="language"
             type="radio"
-            options={["English", "Swedish"]}
-            onChange={(e) => setLanguage(e.target.value)}
-            value={language}
+            options={["Swedish", "English" ]}
+            onChange={handleChange}
+            value={formData.language}
           />
           <Input
             label="genre"
             name="genre"
             type="checkbox"
-            genres={genres} // Detta kommer vara en array av objekt
-            onChange={(e) => {
-              const { value, checked } = e.target;
-              setGenre(
-                (prev) =>
-                  checked
-                    ? [...prev, value] // Lägg till id:t i listan när checkbox är ikryssad
-                    : prev.filter((genre) => genre !== value) // Ta bort id:t från listan när checkbox avmarkeras
-              );
-            }}
-            value={genre}
+            genres={genres}
+            onChange={handleChange}
+            value={formData.genre}
           />
         </form>
       </div>

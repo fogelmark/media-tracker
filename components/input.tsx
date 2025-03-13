@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
+import RatingSystem from "./rating-system";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: string;
-  options?: string[];
+  options?: string[] | number[];
   genres?: { _id: string; name: string }[];
-  ratings?: number[];
-  firstPublished?: number;
+  first_published?: number;
   className?: string;
 }
 
@@ -15,31 +15,38 @@ export default function Input({
   name,
   options,
   genres,
-  ratings,
-  type = "text",
+  type,
   className,
   ...props
 }: InputProps) {
-
-  console.log(genres);
-
+  if (type === "rating") {
+    return (
+      <div className="flex flex-col gap-2">
+        <span className="uppercase font-semibold text-xs">{label}</span>
+        <RatingSystem name={name} value={Number(props.value) || 0} onChange={props.onChange || (() => {})} />
+      </div>
+    );
+  }
+  
+  
   if (type === "radio" && options) {
     return (
       <div className="flex flex-col gap-2">
         <span className="uppercase font-semibold text-xs">{label}</span>
-        <div className="flex gap-2">
+        <div className="flex max-sm:flex-col gap-2">
           {options.map((option) => (
-            <label key={option} className="cursor-pointer">
+            <label key={option} className="cursor-pointer max-sm:text-center">
               <input
-                type="radio"
+                type={type}
                 name={name}
                 value={option}
+                // TODO - Drop shadow error on these radio buttons - investigate
                 className="sr-only peer drop-shadow-[0_100px_100px_rgba(250,0,0)]"
                 checked={props.value === option}
                 onChange={props.onChange}
               />
-              <div className="px-4 py-2 rounded-md select-none text-xs font-semibold hover:bg-slate-600 bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+              <div className="px-4 py-2 rounded select-none text-xs font-semibold hover:bg-slate-600 bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
+                {typeof option === "string" ? option.charAt(0).toUpperCase() + option.slice(1) : option}
               </div>
             </label>
           ))}
@@ -48,10 +55,9 @@ export default function Input({
     );
   }
 
-  // Här går vi igenom options (som är en array av genre-objekt) och använder _id som värde och name som visningstext
   if (type === "checkbox" && genres) {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 w-full">
         <span className="uppercase font-semibold text-xs">{label}</span>
         <div className="flex flex-wrap gap-2">
           {genres.map((genre) => (
@@ -66,8 +72,8 @@ export default function Input({
                 }
                 onChange={props.onChange}
               />
-              <div className="px-4 py-2 select-none hover:bg-slate-600 rounded-md text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
-                {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}{" "}
+              <div className="px-4 py-2 select-none hover:bg-slate-600 rounded text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
+                {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}
               </div>
             </label>
           ))}

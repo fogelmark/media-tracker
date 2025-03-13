@@ -8,7 +8,7 @@ export interface Book extends Document {
   id: string;
   title: string;
   author: string;
-  cover: string;
+  cover_id: string;
   slug: string;
   genre: mongoose.Types.ObjectId[];
   status: "Want To Read" | "In Progress" | "Completed";
@@ -30,7 +30,7 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  cover: {
+  cover_id: {
     type: String,
   },
   slug: {
