@@ -11,7 +11,7 @@ interface CardProps {
 
 export default function Card({ id, title, author, status, rating }: CardProps) {
   return (
-    <div key={id} className="p-4 drop shadow-xl bg-slate-700 rounded-md">
+    <div key={id} className="p-4 drop shadow-xl bg-slate-700">
       <h2>{title}</h2>
       <p>{author}</p>
       <p>{status}</p>
