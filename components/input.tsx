@@ -45,7 +45,7 @@ export default function Input({
                 checked={props.value === option}
                 onChange={props.onChange}
               />
-              <div className="px-4 py-2 rounded select-none text-xs font-semibold hover:bg-slate-600 bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
+              <div className="px-4 py-2 rounded select-none text-xs font-semibold hover:bg-slate-600 bg-slate-700 uppercase peer-checked:bg-blue-600 transition">
                 {typeof option === "string" ? option.charAt(0).toUpperCase() + option.slice(1) : option}
               </div>
             </label>
@@ -72,7 +72,7 @@ export default function Input({
                 }
                 onChange={props.onChange}
               />
-              <div className="px-4 py-2 select-none hover:bg-slate-600 rounded text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-blue-500 transition">
+              <div className="px-4 py-2 select-none hover:bg-slate-600 rounded text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-gradient-to-b from-blue-500 to-blue-700 transition">
                 {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}
               </div>
             </label>

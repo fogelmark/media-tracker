@@ -1,24 +1,17 @@
 "use client";
 
-import { CldUploadWidget } from "next-cloudinary";
-import { cn } from "@/lib/utils";
-import { getCldImageUrl } from "next-cloudinary";
-import { useState, useEffect } from "react";
-import book_placeholder from "@/public/images/book-placeholder.png";
-import normal from "@/public/images/normal-people.jpg";
-import Image from "next/image";
-import Input from "@/components/input";
-import axios from "axios";
-import CloudArrow from "@/components/svg/cloud-arrow";
 import { useBookDetailsContext } from "@/hooks/use-context";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import ImageUploadButton from "@/components/image-upload-button";
+import Input from "@/components/input";
 
 export default function Page() {
   const [genres, setGenres] = useState<{ _id: string; name: string }[]>([]);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [bookCoverUrl, setBookCoverUrl] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
 
   const { formData, setFormData } = useBookDetailsContext();
+  console.log(formData);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -51,56 +44,30 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    fetchGenres();
-  }, []);
+  // useEffect(() => {
+  //   fetchGenres();
+  // }, []);
 
-  useEffect(() => {
-    if (formData.cover_id) {
-      setBookCoverUrl(
-        getCldImageUrl({
-          src: formData.cover_id,
-        })
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/books",
+        formData
       );
+      if (response.status === 201) {
+        setIsSuccess(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }, [formData.cover_id]);
+  };
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col px-4 md:w-2/3 lg:w-1/2 py-10 w-full">
-        {/* TODO - STYLE THE UPLOAD BUTTON. GET AN UPLOAD ICON */}
-        <CldUploadWidget
-          uploadPreset="next-media"
-          onSuccess={(result: any) => {
-            setFormData((prev) => ({
-              ...prev,
-              cover_id: result?.info?.public_id,
-            }));
-          }}
-        >
-          {({ open }) => (
-            <button
-              className="px-4 py-2 flex gap-2 uppercase justify-center font-semibold text-xs items-center bg-blue-500 max-w-[200px] rounded mb-4"
-              onClick={() => open()}
-              disabled={isUploading}
-            >
-              <CloudArrow />
-              {isUploading ? "Uploading..." : "Upload an Image"}
-            </button>
-          )}
-        </CldUploadWidget>
-
-        <div className="relative w-[200px] h-auto aspect-[2/3] mb-4 rounded overflow-hidden">
-          <Image
-            placeholder="blur"
-            src={bookCoverUrl ? bookCoverUrl : normal}
-            fill
-            alt="Book cover image"
-          />
-        </div>
-
+      <div className="flex flex-col px-4 md:w-2/3 lg:w-2/5 py-10 w-full">
         {/* TODO - Refactor this to an array that maps all the inputs */}
-        <form action="submit" className="flex mt-4 flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
             label="title"
             name="title"
@@ -164,6 +131,15 @@ export default function Page() {
             onChange={handleChange}
             value={formData.genre}
           />
+          <ImageUploadButton />
+          <div className="border-t flex items-center justify-center border-slate-600 pt-8">
+          <button
+            type="submit"
+            className="px-10 py-2 uppercase justify-center font-semibold text-sm items-center bg-blue-500 max-w-[200px] rounded-3xl"
+          >
+            submit
+          </button>
+          </div>
         </form>
       </div>
       {/* TODO - Create a preview for how the card will look */}
