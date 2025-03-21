@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import ImageUploadButton from "@/components/image-upload-button";
 import Input from "@/components/input";
@@ -8,13 +8,17 @@ import { Formik, Form } from "formik";
 import React from "react";
 import { validationSchema } from "./form-validation";
 import { handleSubmit } from "./book-form-handler";
+import GenreSkeleton from "@/components/loaders/genre-skeleton";
 
-export default function BookForm() {
+export default function BookForm({
+  genres,
+}: {
+  genres: Promise<{ _id: string; name: string }[]>;
+}) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  
-  const { initialValues } = useBookDetailsContext();
 
+  const { initialValues } = useBookDetailsContext();
 
   return (
     <div className="flex flex-col px-4 md:w-2/3 lg:w-2/5 py-10 w-full">
@@ -22,7 +26,9 @@ export default function BookForm() {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, helpers) => handleSubmit(values, helpers, setErrorMessage, setIsSuccess)}
+        onSubmit={(values, helpers) =>
+          handleSubmit(values, helpers, setErrorMessage, setIsSuccess)
+        }
       >
         {({ isSubmitting, errors, touched, values }) => (
           <Form className="flex flex-col gap-4">
@@ -76,13 +82,15 @@ export default function BookForm() {
               type="radio"
               options={["Swedish", "English"]}
             />
-            {/* <Input
-              label="genre"
-              name="genre"
-              type="checkbox"
-              genres={genres}
-              errors={errors}
-            /> */}
+            <Suspense fallback={<GenreSkeleton />}>
+              <Input
+                label="genre"
+                name="genre"
+                type="checkbox"
+                genres={genres}
+                errors={errors}
+              />
+            </Suspense>
             <ImageUploadButton />
             <div className="border-t flex items-center justify-center border-slate-600 pt-8">
               <button

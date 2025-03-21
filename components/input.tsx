@@ -7,6 +7,7 @@ import {
   FormikErrors,
   FormikTouched,
 } from "formik";
+import { use } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -14,10 +15,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   touched?: FormikTouched<FormikValues>;
   errors?: FormikErrors<FormikValues>;
   options?: string[] | number[];
-  genres?: { _id: string; name: string }[];
   first_published?: number;
   className?: string;
   values?: FormikValues;
+  genres?: Promise<{ _id: string; name: string }[]>;
 }
 
 export default function Input({
@@ -32,6 +33,8 @@ export default function Input({
   values,
   ...props
 }: InputProps) {
+  const allGenres = genres ? use(genres) : null;
+
   if (name === "rating") {
     return (
       <div className="grid grid-rows-input-layout gap-1">
@@ -83,19 +86,20 @@ export default function Input({
       <div className="grid grid-rows-input-layout gap-1 w-full">
         <span className="uppercase font-semibold text-xs">{label}</span>
         <div role="group" className="flex flex-wrap gap-2">
-          {genres.map((genre) => (
-            <label key={genre._id} className="cursor-pointer">
-              <Field
-                type="checkbox"
-                name={name}
-                value={genre._id}
-                className="sr-only peer"
-              />
-              <div className="px-4 py-2 select-none hover:bg-slate-600 rounded text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-gradient-to-b from-blue-500 to-blue-700 transition">
-                {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}
-              </div>
-            </label>
-          ))}
+          {allGenres &&
+            allGenres.map((genre) => (
+              <label key={genre._id} className="cursor-pointer">
+                <Field
+                  type="checkbox"
+                  name={name}
+                  value={genre._id}
+                  className="sr-only peer"
+                />
+                <div className="px-4 py-2 select-none hover:bg-slate-600 rounded text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-gradient-to-b from-blue-500 to-blue-700 transition">
+                  {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}
+                </div>
+              </label>
+            ))}
         </div>
         <ErrorMessage
           name={name}
