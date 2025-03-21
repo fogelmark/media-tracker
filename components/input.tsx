@@ -46,11 +46,13 @@ export default function Input({
           {label}
         </span>
         <RatingSystem name={name} status={values?.status} />
-        <ErrorMessage
-          name={name}
-          component="div"
-          className="text-sm text-red-600"
-        />
+        {values?.status === "Completed" && (
+          <ErrorMessage
+            name={name}
+            component="div"
+            className="text-sm text-red-600"
+          />
+        )}
       </div>
     );
   }
