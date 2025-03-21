@@ -1,38 +1,45 @@
 "use client";
 
 import { CldUploadWidget, getCldImageUrl } from "next-cloudinary";
-import { useBookDetailsContext } from "@/hooks/use-context";
 import React, { useEffect, useState } from "react";
 import book_placeholder from "@/public/images/book-placeholder.png";
 import CloudArrow from "@/components/svg/cloud-arrow";
 import Image from "next/image";
+import { ErrorMessage, useFormikContext } from "formik";
 
-export default function ImageUploadButton() {
+export default function ImageUploadButton({ errors }: any) {
   const [bookCoverUrl, setBookCoverUrl] = useState("");
-  const [resources, setResources] = useState<any>();
-  const { formData, setFormData } = useBookDetailsContext();
+  const [coverDetails, setCoverDetails] = useState<any>(null);
+
+  const { values, setFieldValue } = useFormikContext<any>();
 
   useEffect(() => {
-    if (formData.cover_id) {
+    if (values.cover_id) {
       setBookCoverUrl(
         getCldImageUrl({
-          src: formData.cover_id,
+          src: values.cover_id,
         })
       );
     }
-  }, [formData.cover_id]);
+  }, [values.cover_id]);
 
   return (
-    <div className="grid grid-cols-2 mt-20">
+    <div className="grid grid-cols-2 grid-rows-[auto_1rem] mt-20">
       <div className="flex-initial">
         <CldUploadWidget
           uploadPreset="next-media"
           onSuccess={(result: any) => {
-            setResources(result?.info);
-            setFormData((prev) => ({
-              ...prev,
-              cover_id: result?.info?.public_id,
-            }));
+            const info = result?.info;
+            if (info) {
+              setFieldValue("cover_id", info.public_id);
+              setCoverDetails({
+                filename: info.original_filename,
+                format: info.format,
+                width: info.width,
+                height: info.height,
+                size: info.bytes,
+              });
+            }
           }}
         >
           {({ open }) => (
@@ -46,23 +53,25 @@ export default function ImageUploadButton() {
                 upload an image
               </button>
               <ul className="indent-4">
-                {resources?.original_filename ? (
+                {coverDetails?.filename ? (
                   <li>
-                    {resources?.original_filename}.{resources?.format}
+                    {coverDetails.filename}.{coverDetails.format}
                   </li>
                 ) : (
                   <li>No image uploaded.</li>
                 )}
-                {resources?.height && resources?.width && resources?.bytes && (
-                  <>
-                    <li className="text-slate-400">
-                      {resources?.height}x{resources?.width}
-                    </li>
-                    <li className="text-slate-400">
-                      {Math.ceil(resources?.bytes / 1000)} KB
-                    </li>
-                  </>
-                )}
+                {coverDetails?.height &&
+                  coverDetails?.width &&
+                  coverDetails?.size && (
+                    <>
+                      <li className="text-slate-400">
+                        {coverDetails.height}x{coverDetails.width}
+                      </li>
+                      <li className="text-slate-400">
+                        {Math.ceil(coverDetails.size / 1000)} KB
+                      </li>
+                    </>
+                  )}
               </ul>
             </div>
           )}
@@ -76,6 +85,11 @@ export default function ImageUploadButton() {
           alt="Book cover image"
         />
       </div>
+      <ErrorMessage
+        name="cover_id"
+        component="div"
+        className="text-sm text-red-600"
+      />
     </div>
   );
 }

@@ -1,30 +1,47 @@
-import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Field, useField } from "formik";
+import { useEffect, useState } from "react";
 
 interface RatingSystemProps {
   maxRating?: number;
   name: string;
-  value: number;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  status?: string;
 }
 
-const RatingSystem = ({ maxRating = 5, name, value, onChange }: RatingSystemProps) => {
+const RatingSystem = ({ maxRating = 5, name, status }: RatingSystemProps) => {
   const [hoverRating, setHoverRating] = useState(0);
+  const [field, , helpers] = useField(name);
+
+  const isDisabled = status !== "Completed";
+
+  useEffect(() => {
+    if (isDisabled) {
+      helpers.setValue(0);
+      setHoverRating(0);
+    }
+  }, [status]);
 
   return (
-    <div className="flex gap-0">
+    <div role="group" className="flex gap-0">
       {[...Array(maxRating)].map((_, index) => {
         const ratingValue = index + 1;
-        const isFilled = ratingValue <= (hoverRating || value);
+        const isFilled = ratingValue <= (hoverRating || field.value);
 
         return (
-          <label key={ratingValue} className="cursor-pointer">
-            <input
+          <label
+            key={ratingValue}
+            className={cn("cursor-pointer", {
+              "opacity-50 cursor-default": isDisabled,
+            })}
+          >
+            <Field
+              disabled={isDisabled}
               type="radio"
               name={name}
               value={ratingValue}
+              checked={ratingValue}
               className="sr-only"
-              checked={value === ratingValue}
-              onChange={onChange} // Uppdaterar formData direkt
+              onClick={() => !isDisabled && helpers.setValue(ratingValue)}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -33,13 +50,19 @@ const RatingSystem = ({ maxRating = 5, name, value, onChange }: RatingSystemProp
               stroke="url(#grad1)"
               strokeWidth={1.5}
               className="size-8"
-              onMouseEnter={() => setHoverRating(ratingValue)}
-              onMouseLeave={() => setHoverRating(0)}
+              onMouseEnter={() => !isDisabled && setHoverRating(ratingValue)}
+              onMouseLeave={() => !isDisabled && setHoverRating(0)}
             >
               <defs>
                 <linearGradient id="grad1" x1="0%" y1="0%" x2="50%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: "#eab308", stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: "#f59e0b", stopOpacity: 1 }} />
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: "#eab308", stopOpacity: 1 }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: "#f59e0b", stopOpacity: 1 }}
+                  />
                 </linearGradient>
               </defs>
               <path

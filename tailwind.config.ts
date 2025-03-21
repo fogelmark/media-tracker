@@ -12,6 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      gridTemplateRows: {
+        "input-layout": "auto auto 1rem",
+      }
     },
   },
   plugins: [

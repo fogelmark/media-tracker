@@ -32,12 +32,15 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   },
   cover_id: {
     type: String,
+    required: true,
   },
   slug: {
     type: String,
     unique: true,
   },
-  genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre", required: true }],
+  genre: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Genre", required: true },
+  ],
   status: {
     type: String,
     enum: ["Want To Read", "In Progress", "Completed"],
@@ -50,17 +53,18 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   },
   pages: {
     type: Number,
-    required: false,
+    required: true,
   },
   rating: {
     type: Number,
     min: 1,
     max: 5,
     default: null,
+    required: true,
   },
   first_published: {
     type: Number,
-    required: false,
+    required: true,
   },
   createdAt: {
     type: Date,
