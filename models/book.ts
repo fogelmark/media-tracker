@@ -60,7 +60,6 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
     min: 1,
     max: 5,
     default: null,
-    required: true,
   },
   first_published: {
     type: Number,

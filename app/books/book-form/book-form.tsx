@@ -1,14 +1,15 @@
 "use client";
 import { Suspense, useState } from "react";
 
+import { Formik, Form } from "formik";
+import { handleSubmit } from "./book-form-handler";
+import { Toaster } from "react-hot-toast";
+import { useBookDetailsContext } from "@/hooks/use-context";
+import { validationSchema } from "./form-validation";
+import GenreSkeleton from "@/components/loaders/genre-skeleton";
 import ImageUploadButton from "@/components/image-upload-button";
 import Input from "@/components/input";
-import { useBookDetailsContext } from "@/hooks/use-context";
-import { Formik, Form } from "formik";
 import React from "react";
-import { validationSchema } from "./form-validation";
-import { handleSubmit } from "./book-form-handler";
-import GenreSkeleton from "@/components/loaders/genre-skeleton";
 
 export default function BookForm({
   genres,
@@ -21,14 +22,17 @@ export default function BookForm({
   const { initialValues } = useBookDetailsContext();
 
   return (
-    <div className="flex flex-col px-4 md:w-2/3 lg:w-2/5 py-10 w-full">
+    <div
+      className="flex flex-col px-4 md:w-2/3 lg:w-2/5 py-10 w-full"
+    >
+      <Toaster />
       {/* TODO - Refactor this to an array that maps all the inputs */}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, helpers) =>
-          handleSubmit(values, helpers, setErrorMessage, setIsSuccess)
-        }
+        onSubmit={(values, helpers) => {
+          handleSubmit(values, helpers, setErrorMessage, setIsSuccess);
+        }}
       >
         {({ isSubmitting, errors, touched, values }) => (
           <Form className="flex flex-col gap-4">
