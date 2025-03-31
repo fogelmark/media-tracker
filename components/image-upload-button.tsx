@@ -5,23 +5,23 @@ import React, { useEffect, useState } from "react";
 import book_placeholder from "@/public/images/book-placeholder.png";
 import CloudArrow from "@/components/svg/cloud-arrow";
 import Image from "next/image";
-import { ErrorMessage, useFormikContext } from "formik";
+// import { ErrorMessage, useFormikContext } from "formik";
 
 export default function ImageUploadButton({ errors }: any) {
   const [bookCoverUrl, setBookCoverUrl] = useState("");
   const [coverDetails, setCoverDetails] = useState<any>(null);
 
-  const { values, setFieldValue } = useFormikContext<any>();
+  // const { values, setFieldValue } = useFormikContext<any>();
 
-  useEffect(() => {
-    if (values.cover_id) {
-      setBookCoverUrl(
-        getCldImageUrl({
-          src: values.cover_id,
-        })
-      );
-    }
-  }, [values.cover_id]);
+  // useEffect(() => {
+  //   if (values.cover_id) {
+  //     setBookCoverUrl(
+  //       getCldImageUrl({
+  //         src: values.cover_id,
+  //       })
+  //     );
+  //   }
+  // }, [values.cover_id]);
 
   return (
     <div className="grid grid-cols-2 grid-rows-[auto_1rem] mt-20">
@@ -31,7 +31,7 @@ export default function ImageUploadButton({ errors }: any) {
           onSuccess={(result: any) => {
             const info = result?.info;
             if (info) {
-              setFieldValue("cover_id", info.public_id);
+              // setFieldValue("cover_id", info.public_id);
               setCoverDetails({
                 filename: info.original_filename,
                 format: info.format,
@@ -46,7 +46,7 @@ export default function ImageUploadButton({ errors }: any) {
             <div className="flex flex-col text-sm">
               <button
                 type="button"
-                className="px-4 py-2 flex gap-2 uppercase justify-center font-semibold text-sm items-center bg-gradient-to-b drop-shadow-md from-indigo-500 to-indigo-700  max-w-[220px] rounded-3xl mb-4"
+                className="px-4 py-2 flex gap-2 uppercase justify-center font-semibold text-sm items-center bg-gradient-to-b drop-shadow-md from-amber-500 to-amber-700  max-w-[220px] rounded-3xl mb-4"
                 onClick={() => open()}
               >
                 <CloudArrow />
@@ -85,11 +85,11 @@ export default function ImageUploadButton({ errors }: any) {
           alt="Book cover image"
         />
       </div>
-      <ErrorMessage
+      {/* <ErrorMessage
         name="cover_id"
         component="div"
-        className="text-sm text-red-600"
-      />
+        className="text-sm text-red-700"
+      /> */}
     </div>
   );
 }

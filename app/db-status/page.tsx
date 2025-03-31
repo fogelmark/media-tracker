@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function DBStatus() {
   const [status, setStatus] = useState<string>('Loading...');
-  const [color, setColor] = useState<string>('text-gray-500'); // Default color
+  const [color, setColor] = useState<string>('text-gray-500');
 
   useEffect(() => {
     const checkDatabaseStatus = async () => {

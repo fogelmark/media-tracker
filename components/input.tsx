@@ -50,7 +50,7 @@ export default function Input({
           <ErrorMessage
             name={name}
             component="div"
-            className="text-sm text-red-600"
+            className="text-xs text-red-700"
           />
         )}
       </div>
@@ -71,7 +71,7 @@ export default function Input({
                 // TODO - Drop shadow error on these radio buttons - investigate
                 className="sr-only peer drop-shadow-[0_100px_100px_rgba(250,0,0)]"
               />
-              <div className="px-4 py-2 rounded select-none text-xs font-semibold hover:bg-slate-600 bg-slate-700 uppercase peer-checked:bg-blue-600 transition">
+              <div className="px-4 py-2 rounded select-none text-xs font-semibold hover:bg-gray-600 bg-gray-700 uppercase peer-checked:bg-blue-600 transition">
                 {typeof option === "string"
                   ? option.charAt(0).toUpperCase() + option.slice(1)
                   : option}
@@ -97,7 +97,7 @@ export default function Input({
                   value={genre._id}
                   className="sr-only peer"
                 />
-                <div className="px-4 py-2 select-none hover:bg-slate-600 rounded text-xs font-semibold bg-slate-700 uppercase peer-checked:bg-gradient-to-b from-blue-500 to-blue-700 transition">
+                <div className="px-4 py-2 select-none hover:bg-gray-600 rounded text-xs font-semibold bg-gray-700 uppercase peer-checked:bg-gradient-to-b from-blue-500 to-blue-700 transition">
                   {genre.name.charAt(0).toUpperCase() + genre.name.slice(1)}
                 </div>
               </label>
@@ -106,15 +106,18 @@ export default function Input({
         <ErrorMessage
           name={name}
           component="div"
-          className="text-sm text-red-600"
+          className="text-xs text-red-700"
         />
       </div>
     );
   }
 
+  // ONLY SHOW ERROR WHEN FORM IS SUBMITTED, NOT ON CHANGE/TOUCH
   return (
     <div className="grid grid-rows-input-layout gap-1">
-      <label htmlFor={name} className="uppercase font-semibold text-xs">
+      <label htmlFor={name} className={cn("uppercase font-semibold text-xs", {
+        "text-red-700": errors?.[name] && touched?.[name],
+      })}>
         {label}
       </label>
       <Field
@@ -122,10 +125,10 @@ export default function Input({
         name={name}
         type={type}
         className={cn(
-          "border-2 shadow-md py-2 px-4 bg-slate-50 outline-none rounded text-black",
-          {
-            "ring-2 ring-red-600": errors?.[name] && touched?.[name],
-          },
+          "border shadow-md py-2 px-4 bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 outline-none rounded",
+          // {
+          //   "border-red-700": errors?.[name] && touched?.[name],
+          // },
 
           className
         )}
@@ -134,7 +137,7 @@ export default function Input({
       <ErrorMessage
         name={name}
         component="div"
-        className="text-sm text-red-600"
+        className="text-xs text-red-700"
       />
     </div>
   );

@@ -11,11 +11,12 @@ export interface Book extends Document {
   cover_id: string;
   slug: string;
   genre: mongoose.Types.ObjectId[];
-  status: "Want To Read" | "In Progress" | "Completed";
+  status: "Want to Read" | "In Progress" | "Completed";
   language: "Swedish" | "English";
   pages?: number;
   rating?: number | null;
   first_published?: number;
+  notes: string;
   createdAt: Date;
 }
 
@@ -32,7 +33,6 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   },
   cover_id: {
     type: String,
-    required: true,
   },
   slug: {
     type: String,
@@ -43,8 +43,8 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   ],
   status: {
     type: String,
-    enum: ["Want To Read", "In Progress", "Completed"],
-    default: "Want To Read",
+    enum: ["Want to Read", "In Progress", "Completed"],
+    default: "Want to Read",
   },
   language: {
     type: String,
@@ -52,7 +52,7 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
     default: "Swedish",
   },
   pages: {
-    type: Number,
+    type: String,
     required: true,
   },
   rating: {
@@ -62,8 +62,12 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
     default: null,
   },
   first_published: {
-    type: Number,
+    type: String,
     required: true,
+  },
+  notes: {
+    type: String,
+    required: false,
   },
   createdAt: {
     type: Date,
