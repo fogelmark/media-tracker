@@ -2,21 +2,12 @@
 
 import type React from "react";
 
-import { Suspense, use, useState } from "react";
-import {
-  Upload,
-  Star,
-  BookOpen,
-  BookText,
-  Clock,
-  Cloud,
-  CircleX,
-} from "lucide-react";
+import { Suspense, use, useEffect } from "react";
+import { Star, BookOpen, BookText, Clock } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Image from "next/image";
-import normal_people from "@/public/images/normal-people.jpg";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,19 +34,35 @@ import {
 import Cloudinary from "@/components/ui/cloudinary";
 import GenreSkeleton from "@/components/loaders/genre-skeleton";
 import { handleSubmit } from "./form-submit-handler";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
-const formSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  author: z.string().min(1, { message: "Author is required" }),
-  pages: z.string(),
-  first_published: z.string(),
-  language: z.enum(["English", "Swedish"]),
-  status: z.enum(["Want to Read", "In Progress", "Completed"]),
-  rating: z.number().min(0).max(5),
-  notes: z.string().optional(),
-  cover_id: z.string().optional(),
-  genre: z.array(z.string()),
-});
+const formSchema = z
+  .object({
+    title: z.string().min(1, { message: "Title is required" }),
+    author: z.string().min(1, { message: "Author is required" }),
+    pages: z.string().min(1, { message: "Pages is required" }),
+    first_published: z.string().min(1, {
+      message: "First publication year is required",
+    }),
+    language: z.enum(["English", "Swedish"]),
+    status: z.enum(["Want to Read", "In Progress", "Completed"]),
+    rating: z.number().nullable().optional(),
+    notes: z.string().optional(),
+    cover_id: z.string().optional(),
+    genre: z
+      .array(z.string().min(1))
+      .min(1, { message: "At least one genre is required" }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === "Completed" && (!data.rating || data.rating < 1)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Rating is required when status is 'Completed'",
+        path: ["rating"],
+      });
+    }
+  });
 
 export default function ShadBookForm({
   genres,
@@ -63,7 +70,6 @@ export default function ShadBookForm({
   genres: Promise<{ _id: string; name: string }[]>;
 }) {
   const allGenres = genres ? use(genres) : null;
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,31 +80,53 @@ export default function ShadBookForm({
       first_published: "",
       language: "Swedish",
       status: "Want to Read",
-      rating: 0,
+      rating: null,
       notes: "",
       cover_id: "",
       genre: [],
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Form submitted with values:", values);
-    await handleSubmit({ ...values, genre: selectedGenres });
-    form.reset();
-    setSelectedGenres([]);
-  };
+  const { toast } = useToast();
 
-  const handleGenreToggle = (genre: string) => {
-    if (selectedGenres.includes(genre)) {
-      setSelectedGenres(selectedGenres.filter((g) => g !== genre));
+  const selectedGenres = form.watch("genre") || [];
+  const status = form.watch("status");
+  const ratingg = form.watch("rating");
+  console.log(ratingg);
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const result = await handleSubmit({ ...values, genre: selectedGenres });
+
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: result.message,
+        variant: "default",
+      });
+      form.reset();
     } else {
-      setSelectedGenres([...selectedGenres, genre]);
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive",
+      });
     }
   };
 
   const setRating = (rating: number) => {
-    form.setValue("rating", rating);
+    if (status === "Completed") {
+      form.setValue("rating", rating);
+    } else {
+      form.setValue("rating", null);
+    }
   };
+
+  useEffect(() => {
+    if (status !== "Completed") {
+      form.setValue("rating", null);
+      form.clearErrors("rating");
+    }
+  }, [status, form]);
 
   return (
     <div className=" text-gray-300 flex items-center justify-center p-4">
@@ -139,7 +167,7 @@ export default function ShadBookForm({
                               <Input
                                 {...field}
                                 placeholder="Title"
-                                className="bg-gray-700 border-gray-600 text-gray-300 placeholder:text-gray-400 focus-visible:ring-indigo-500"
+                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500"
                               />
                             </FormControl>
                             <FormMessage className="text-red-400" />
@@ -156,7 +184,7 @@ export default function ShadBookForm({
                               <Input
                                 {...field}
                                 placeholder="Author"
-                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-indigo-500"
+                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500"
                               />
                             </FormControl>
                             <FormMessage className="text-red-400" />
@@ -175,7 +203,7 @@ export default function ShadBookForm({
                                   {...field}
                                   type="string"
                                   placeholder="Pages"
-                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-indigo-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                 />
                               </FormControl>
                               <FormMessage className="text-red-400" />
@@ -192,7 +220,7 @@ export default function ShadBookForm({
                                   {...field}
                                   type="string"
                                   placeholder="First Published Year"
-                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-indigo-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                 />
                               </FormControl>
                               <FormMessage className="text-red-400" />
@@ -265,10 +293,10 @@ export default function ShadBookForm({
                           <div className="grid grid-cols-3 gap-4">
                             <Button
                               type="button"
-                              variant="outline"
-                              className={`border-gray-600 bg-gray-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 ${
+                              variant="default"
+                              className={`border-gray-600 bg-gray-700 ${
                                 field.value === "Want to Read"
-                                  ? "bg-indigo-600 text-white border-indigo-600"
+                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
                                   : ""
                               }`}
                               onClick={() =>
@@ -279,10 +307,10 @@ export default function ShadBookForm({
                             </Button>
                             <Button
                               type="button"
-                              variant="outline"
-                              className={`border-gray-600 bg-gray-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 ${
+                              variant="default"
+                              className={`border-gray-600 bg-gray-700 ${
                                 field.value === "In Progress"
-                                  ? "bg-indigo-600 text-white border-indigo-600"
+                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
                                   : ""
                               }`}
                               onClick={() =>
@@ -293,10 +321,10 @@ export default function ShadBookForm({
                             </Button>
                             <Button
                               type="button"
-                              variant="outline"
-                              className={`border-gray-600 bg-gray-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 ${
+                              variant="default"
+                              className={`border-gray-600 bg-gray-700 ${
                                 field.value === "Completed"
-                                  ? "bg-indigo-600 text-white border-indigo-600"
+                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
                                   : ""
                               }`}
                               onClick={() =>
@@ -319,13 +347,14 @@ export default function ShadBookForm({
                           <FormLabel className="text-sm font-medium text-slate-300">
                             Your Rating
                           </FormLabel>
-                          <div className="flex space-x-1">
+                          <div className="flex w-fit">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
                                 key={star}
                                 type="button"
                                 onClick={() => setRating(star)}
-                                className="focus:outline-none"
+                                className="focus:outline-none px-[1px] disabled:opacity-50"
+                                disabled={status !== "Completed"}
                               >
                                 <Star
                                   strokeWidth={1.5}
@@ -338,7 +367,9 @@ export default function ShadBookForm({
                               </button>
                             ))}
                           </div>
-                          <FormMessage className="text-red-400" />
+                          {status === "Completed" && (
+                            <FormMessage className="text-red-400" />
+                          )}
                         </FormItem>
                       )}
                     />
@@ -366,29 +397,47 @@ export default function ShadBookForm({
                 </TabsContent>
 
                 <TabsContent value="genres & categories" className="space-y-6">
-                  <div className="space-y-6">
-                    <Label className="text-sm font-medium text-gray-300">
-                      Select Genres (Multiple)
-                    </Label>
-                    <Suspense fallback={<GenreSkeleton />}>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {allGenres &&
-                          allGenres.map((genre) => (
-                            <Badge
-                              key={genre._id}
-                              className={`cursor-pointer py-2 px-3 text-sm justify-center select-none ${
-                                selectedGenres.includes(genre._id)
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600"
-                                  : "bg-gray-700 hover:bg-gray-600"
-                              }`}
-                              onClick={() => handleGenreToggle(genre._id)}
-                            >
-                              {genre.name}
-                            </Badge>
-                          ))}
-                      </div>
-                    </Suspense>
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="genre"
+                    render={({ field }) => {
+                      const handleToggle = (id: string) => {
+                        const current = field.value || [];
+                        const updated = current.includes(id)
+                          ? current.filter((genreId: string) => genreId !== id)
+                          : [...current, id];
+                        field.onChange(updated);
+                      };
+
+                      return (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-300">
+                            Select Genres (Multiple)
+                          </FormLabel>
+
+                          <Suspense fallback={<GenreSkeleton />}>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                              {allGenres?.map((genre) => (
+                                <Badge
+                                  key={genre._id}
+                                  className={`cursor-pointer py-2 px-3 text-sm justify-center select-none ${
+                                    field.value?.includes(genre._id)
+                                      ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600"
+                                      : "bg-gray-700"
+                                  }`}
+                                  onClick={() => handleToggle(genre._id)}
+                                >
+                                  {genre.name}
+                                </Badge>
+                              ))}
+                            </div>
+                          </Suspense>
+
+                          <FormMessage className="text-red-400" />
+                        </FormItem>
+                      );
+                    }}
+                  />
                 </TabsContent>
               </Tabs>
             </CardContent>
