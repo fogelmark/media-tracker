@@ -89,10 +89,11 @@ export default function ShadBookForm({
 
   const { toast } = useToast();
 
+  const { isSubmitting } = form.formState;
+  console.log(isSubmitting);
+
   const selectedGenres = form.watch("genre") || [];
   const status = form.watch("status");
-  const ratingg = form.watch("rating");
-  console.log(ratingg);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const result = await handleSubmit({ ...values, genre: selectedGenres });
@@ -167,7 +168,7 @@ export default function ShadBookForm({
                               <Input
                                 {...field}
                                 placeholder="Title"
-                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500"
+                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300"
                               />
                             </FormControl>
                             <FormMessage className="text-red-400" />
@@ -184,7 +185,7 @@ export default function ShadBookForm({
                               <Input
                                 {...field}
                                 placeholder="Author"
-                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500"
+                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300"
                               />
                             </FormControl>
                             <FormMessage className="text-red-400" />
@@ -203,7 +204,7 @@ export default function ShadBookForm({
                                   {...field}
                                   type="string"
                                   placeholder="Pages"
-                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                 />
                               </FormControl>
                               <FormMessage className="text-red-400" />
@@ -220,7 +221,7 @@ export default function ShadBookForm({
                                   {...field}
                                   type="string"
                                   placeholder="First Published Year"
-                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-amber-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                 />
                               </FormControl>
                               <FormMessage className="text-red-400" />
@@ -245,7 +246,7 @@ export default function ShadBookForm({
                                   />
                                   <Label
                                     htmlFor="Swedish"
-                                    className="cursor-pointer text-xs uppercase font-semibold"
+                                    className="cursor-pointer text-sm font-semibold"
                                   >
                                     Swedish
                                   </Label>
@@ -257,7 +258,7 @@ export default function ShadBookForm({
                                   />
                                   <Label
                                     htmlFor="English"
-                                    className="cursor-pointer text-xs uppercase font-semibold"
+                                    className="cursor-pointer text-sm font-semibold"
                                   >
                                     English
                                   </Label>
@@ -287,14 +288,14 @@ export default function ShadBookForm({
                       name="status"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-sm font-medium text-gray-300">
+                          {/* <FormLabel className="text-sm font-semibold text-gray-300">
                             Reading Status
-                          </FormLabel>
+                          </FormLabel> */}
                           <div className="grid grid-cols-3 gap-4">
                             <Button
                               type="button"
                               variant="default"
-                              className={`border-gray-600 bg-gray-700 ${
+                              className={`border-gray-600 bg-gray-700 font-semibold ${
                                 field.value === "Want to Read"
                                   ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
                                   : ""
@@ -308,7 +309,7 @@ export default function ShadBookForm({
                             <Button
                               type="button"
                               variant="default"
-                              className={`border-gray-600 bg-gray-700 ${
+                              className={`border-gray-600 bg-gray-700 font-semibold ${
                                 field.value === "In Progress"
                                   ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
                                   : ""
@@ -322,7 +323,7 @@ export default function ShadBookForm({
                             <Button
                               type="button"
                               variant="default"
-                              className={`border-gray-600 bg-gray-700 ${
+                              className={`border-gray-600 bg-gray-700 font-semibold ${
                                 field.value === "Completed"
                                   ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
                                   : ""
@@ -344,9 +345,9 @@ export default function ShadBookForm({
                       name="rating"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-sm font-medium text-slate-300">
+                          {/* <FormLabel className="text-sm font-medium text-slate-300">
                             Your Rating
-                          </FormLabel>
+                          </FormLabel> */}
                           <div className="flex w-fit">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
@@ -379,13 +380,13 @@ export default function ShadBookForm({
                       name="notes"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-sm font-medium text-gray-300">
+                          {/* <FormLabel className="text-sm font-medium text-gray-300">
                             Reading Notes (Optional)
-                          </FormLabel>
+                          </FormLabel> */}
                           <FormControl>
                             <Textarea
                               {...field}
-                              placeholder="Add your personal notes about this book"
+                              placeholder="Add your personal notes about this book (optional)"
                               className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-indigo-500 min-h-[150px]"
                             />
                           </FormControl>
@@ -411,9 +412,9 @@ export default function ShadBookForm({
 
                       return (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-300">
+                          {/* <FormLabel className="text-sm font-medium text-gray-300">
                             Select Genres (Multiple)
-                          </FormLabel>
+                          </FormLabel> */}
 
                           <Suspense fallback={<GenreSkeleton />}>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -441,19 +442,13 @@ export default function ShadBookForm({
                 </TabsContent>
               </Tabs>
             </CardContent>
-            <CardFooter className="flex justify-between border-t border-gray-700 p-6">
-              <Button
-                type="button"
-                variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
-              >
-                Cancel
-              </Button>
+            <CardFooter className="flex border-t border-gray-700 p-6">
               <Button
                 type="submit"
-                className="bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-100 hover:bg-gradient-to-t hover:from-acapulco-600 hover:to-acapulco-500"
+                disabled={isSubmitting}
+                className="bg-gradient-to-b px-10 font-semibold from-acapulco-500 to-acapulco-600 text-gray-100 hover:bg-gradient-to-t hover:from-acapulco-600 hover:to-acapulco-500"
               >
-                Save Book
+                Add Book
               </Button>
             </CardFooter>
           </form>
