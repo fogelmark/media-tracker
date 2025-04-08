@@ -64,7 +64,7 @@ const formSchema = z
     }
   });
 
-export default function ShadBookForm({
+export default function BookForm({
   genres,
 }: {
   genres: Promise<{ _id: string; name: string }[]>;
@@ -387,7 +387,7 @@ export default function ShadBookForm({
                             <Textarea
                               {...field}
                               placeholder="Add your personal notes about this book (optional)"
-                              className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-indigo-500 min-h-[150px]"
+                              className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300 min-h-[150px]"
                             />
                           </FormControl>
                           <FormMessage className="text-red-400" />
