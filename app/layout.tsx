@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { BookDetailsContextProvider } from "@/context/book-details";
 import { Toaster } from "@/components/ui/toaster";
+import { inter } from "@/lib/fonts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[hsl(215,28%,12%)] text-gray-300`}
+        className={`${inter.className} antialiased bg-[hsl(215,28%,12%)] text-gray-300`}
       >
         <BookDetailsContextProvider>{children}</BookDetailsContextProvider>
         <Toaster />

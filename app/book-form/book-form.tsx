@@ -90,7 +90,6 @@ export default function BookForm({
   const { toast } = useToast();
 
   const { isSubmitting } = form.formState;
-  console.log(isSubmitting);
 
   const selectedGenres = form.watch("genre") || [];
   const status = form.watch("status");
@@ -133,8 +132,9 @@ export default function BookForm({
     <div className=" text-gray-300 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl bg-gray-800 border-gray-700">
         <CardHeader className="border-b border-gray-700">
-          <CardTitle className="text-2xl font-medium text-gray-300">
-            Add New Book
+          <CardTitle className="text-2xl flex items-center gap-2 text-gray-300">
+            <BookText className="h-6 w-6" />
+            <h1>Add a book</h1>
           </CardTitle>
         </CardHeader>
         <Form {...form}>

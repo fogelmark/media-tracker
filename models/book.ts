@@ -10,6 +10,7 @@ export interface Book extends Document {
   author: string;
   cover_id: string;
   slug: string;
+  description: string;
   genre: mongoose.Types.ObjectId[];
   status: "Want to Read" | "In Progress" | "Completed";
   language: "Swedish" | "English";
@@ -37,6 +38,10 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   slug: {
     type: String,
     unique: true,
+  },
+  description: {
+    type: String,
+    required: false,
   },
   genre: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Genre", required: true },
