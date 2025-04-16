@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Book } from "@/types";
+import { Book, Genre } from "@/types";
 import { Badge, Languages, Star } from "lucide-react";
 import book_placeholder from "@/public/images/book-placeholder.png";
 import Image from "next/image";
@@ -60,8 +60,14 @@ export default async function Page() {
                 <p className="text-gray-400">{book.description}</p>
               </div>
               <div>
-                <h3 className="font-semibold">Genres</h3>
-                <p className="text-gray-400">{book.genre}</p>
+                <h3 className="font-semibold mb-1">Genres</h3>
+                <div className="flex gap-2 items-center">
+                {book.genre.map((genre: Genre) => (
+                  <div key={genre._id} className="flex text-xs font-semibold gap-2 items-center">
+                    <p>{genre.name}</p>
+                  </div>
+                ))}
+                </div>
               </div>
               <div className="mb-4">
                 <h3 className="text-sm font-medium text-gray-300 mb-1">Notes</h3>

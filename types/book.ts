@@ -8,6 +8,11 @@ export interface Book {
   status: string;
   rating: number;
   language: string;
-  genre: string[];
+  genre: Genre[];
   [key: string]: any;
+}
+
+export interface Genre {
+  _id: string;
+  name: string;
 }
