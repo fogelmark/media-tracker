@@ -13,7 +13,7 @@ const genreSchema: Schema<Genre> = new mongoose.Schema({
   },
 });
 
-delete mongoose.models["Genre"];
+// delete mongoose.models["Genre"];
 
 const Genre: Model<Genre> =
   mongoose.models.Genre || mongoose.model<Genre>("Genre", genreSchema);

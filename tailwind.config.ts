@@ -25,12 +25,11 @@ export default {
           "900": "#243d37",
           "950": "#10231f",
         },
+        highlight: "#ffffff0d",
   		},
       boxShadow: {
         "button-bezel":
           "inset 0 1px 0 0 hsla(0, 0%, 100%, .1), inset 0 -1px 0 0 rgba(0, 0, 0, .25), 0 2px 6px 0 rgba(0, 0, 0, .1)",
-        "highlight":
-          "inset 0 1px 0 0 #ffffff0d",
       },
   		gridTemplateRows: {
   			'input-layout': 'auto auto 1rem'

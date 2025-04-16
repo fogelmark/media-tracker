@@ -1,8 +1,7 @@
-import Book from "@/models/book";
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse, NextRequest } from "next/server";
-import mongoose from "mongoose";  
-import Genre from "../../../models/genre";
+import Book from "@/models/book";
+import mongoose from "mongoose";
 
 // Fetch all books
 export async function GET() {

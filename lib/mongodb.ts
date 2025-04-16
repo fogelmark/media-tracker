@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import '@/models/book';
+import '@/models/genre';
 
 const MONGO_URI = process.env.MONGO_URI || '';
 
