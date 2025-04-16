@@ -18,23 +18,62 @@ export default async function Page() {
   console.log(books);
 
   return (
-    <div className="flex gap-4 min-h-screen justify-center items-center">
+    <div className="flex flex-col py-10 w-full gap-4 min-h-screen items-center">
       {books.map((book: Book) => (
-        <Card key={book._id}>
-          <div>
-            {/* <Image /> */}
+        <Card
+          key={book._id}
+          className="flex shadow-highlight overflow-hidden"
+        >
+          <div className="py-6 pl-6 relative justify-self-center h-auto aspect-[2/3]">
+            <Image src={book_placeholder} className="rounded" alt="bok" />
           </div>
-          <CardHeader>
-            <CardTitle>{book.title}</CardTitle>
-            <CardDescription>by {book.author}</CardDescription>
-          </CardHeader>
-          <CardContent>
-          <Languages className="h-4 w-4 mr-1" />
-            <p>Card Content</p>
-          </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
+          <div>
+            <CardHeader>
+              <CardTitle>{book.title}</CardTitle>
+              <CardDescription className="text-gray-400">
+                by {book.author}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm space-y-2">
+              <div className="flex gap-2 items-center text-gray-400">
+                <div className="flex gap-[1px]">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < book.rating
+                          ? "fill-amber-500 text-amber-500"
+                          : "text-gray-500"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <Languages className="h-4 w-4" />
+                <p className="">{book.language}</p>
+                <p className="">{book.pages} pages</p>
+              </div>
+              <p className="text-gray-400">
+                First published {book.first_published}
+              </p>
+              <div>
+                <h3 className="font-semibold">Description</h3>
+                <p className="text-gray-400">{book.description}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold">Genres</h3>
+                <p className="text-gray-400">{book.genre}</p>
+              </div>
+              <div className="mb-4">
+                <h3 className="text-sm font-medium text-gray-300 mb-1">Notes</h3>
+                <div className="bg-gray-700/50 rounded-md p-3 text-gray-300 text-sm italic">
+                  <p className="line-clamp-2">{book.notes}</p>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <p>Card Footer</p>
+            </CardFooter>
+          </div>
         </Card>
       ))}
     </div>
