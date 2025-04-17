@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Book, Genre } from "@/types";
 import { Languages, Star } from "lucide-react";
-import book_placeholder from "@/public/images/book-placeholder.png";
 import Image from "next/image";
 import { getCldImageUrl } from "next-cloudinary";
+import DescriptionDropdown from "@/components/description-dropdown";
+
 
 export default async function Page() {
   const data = await fetch("http://localhost:3000/api/books/");
@@ -51,21 +52,20 @@ export default async function Page() {
                 <div className="md:pr-2">
                   <Languages className="h-4 w-4 max-sm:hidden" />
                 </div>
-                <p className="md:px-2">{book.language}</p>
+                <p className="md:px-2">
+                  In <span className="lowercase">{book.language}</span>
+                </p>
                 <p className="md:px-2">{book.pages} pages</p>
                 <p className="md:px-2">
                   First published {book.first_published}
                 </p>
               </div>
               {book.description && (
-                <div>
-                  <h3 className="font-semibold mb-1">Description</h3>
-                  <p className="text-gray-400">{book.description}</p>
-                </div>
+                <DescriptionDropdown description={book.description} />
               )}
               <div>
                 <h3 className="font-semibold mb-1">Genres</h3>
-                <div className="flex gap-4 items-center">
+                <div className="flex flex-wrap gap-2 items-center">
                   {book.genre.map((genre: Genre) => (
                     <div
                       key={genre._id}
@@ -82,7 +82,7 @@ export default async function Page() {
                     Notes
                   </h3>
                   <div className="bg-gray-700/50 rounded-md p-3 text-gray-300 text-sm italic">
-                    <p className="line-clamp-2">{book.notes}</p>
+                    <p>{book.notes}</p>
                   </div>
                 </div>
               )}
