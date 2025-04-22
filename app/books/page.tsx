@@ -1,24 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Book, Genre } from "@/types";
-import { Languages, Star } from "lucide-react";
+import { BookOpenText, Calendar, Languages, Star } from "lucide-react";
 import Image from "next/image";
 import { getCldImageUrl } from "next-cloudinary";
 import DescriptionDropdown from "@/components/description-dropdown";
-
 
 export default async function Page() {
   const data = await fetch("http://localhost:3000/api/books/");
   const books = await data.json();
 
   return (
-    <div className="flex max-sm:px-4 flex-col py-10 w-full gap-4 min-h-screen items-center">
+    <div className="flex max-sm:px-4 flex-col py-10 w-full gap-4 md:min-h-min items-center">
       {books.map((book: Book) => (
         <Card
           key={book._id}
           className="flex max-sm:flex-col w-full max-w-4xl border-t-[1px] border-highlight overflow-hidden"
         >
-          <div className="p-6">
+          <div className="p-6 pr-0">
             <div className="relative min-w-[200px] h-auto aspect-[2/3]">
               <Image
                 src={getCldImageUrl({
@@ -48,17 +47,25 @@ export default async function Page() {
                   />
                 ))}
               </div>
-              <div className="flex max-sm:row-start-5 text-gray-400 flex-col md:flex-row md:items-center md:divide-x md:divide-gray-500">
-                <div className="md:pr-2">
-                  <Languages className="h-4 w-4 max-sm:hidden" />
+              <div className="flex max-sm:row-start-5 text-gray-400 flex-col md:flex-row md:items-center">
+                <div className="flex flex-col md:flex-row gap-1 md:gap-5">
+                  <div className="flex gap-2 items-center">
+                    <Languages className="size-4" />
+                    <p>
+                      Read in <span className="lowercase">{book.language}</span>
+                    </p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <BookOpenText className="size-4" />
+                    <p>{book.pages} pages</p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Calendar className="size-4" />
+                    <p>
+                      First published {book.first_published}
+                    </p>
+                  </div>
                 </div>
-                <p className="md:px-2">
-                  In <span className="lowercase">{book.language}</span>
-                </p>
-                <p className="md:px-2">{book.pages} pages</p>
-                <p className="md:px-2">
-                  First published {book.first_published}
-                </p>
               </div>
               {book.description && (
                 <DescriptionDropdown description={book.description} />

@@ -1,19 +1,13 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AppSidebar } from "@/components/app-sidebar";
 import { BookDetailsContextProvider } from "@/context/book-details";
-import { Toaster } from "@/components/ui/toaster";
+import { Geist, Geist_Mono } from "next/font/google";
 import { inter } from "@/lib/fonts";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import type { Metadata } from "next";
+import Header from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,12 +20,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} antialiased bg-[hsl(215,28%,12%)] text-gray-300`}
+        className={`${inter.className} antialiased bg-background text-gray-300`}
       >
-        <BookDetailsContextProvider>{children}</BookDetailsContextProvider>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <BookDetailsContextProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="w-full">
+                <Header />
+                {children}
+              </main>
+            </SidebarProvider>
+          </BookDetailsContextProvider>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

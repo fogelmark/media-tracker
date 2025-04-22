@@ -16,14 +16,13 @@ export default function DescriptionDropdown({
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
-    console.log(isOpen);
   };
 
   return (
     <div>
       <h3 className="font-semibold mb-1">Description</h3>
       <div
-        className={cn("relative h-14 overflow-hidden flex flex-col gap-4", {
+        className={cn("relative h-10 overflow-hidden flex flex-col gap-4", {
           "h-fit": isOpen,
         })}
       >
@@ -36,14 +35,18 @@ export default function DescriptionDropdown({
           </div>
         ))}
       </div>
-      <Button onClick={handleToggle} className="p-0 h-9 flex text-gray-300" variant="link">
-          {isOpen ? "Show less" : "Show more"}
-          <ChevronDown
-            className={cn("transition-transform duration-200",{
-              "rotate-180": isOpen,
-            })}
-          />
-        </Button>
+      <Button
+        onClick={handleToggle}
+        className="p-0 h-9 flex text-gray-300"
+        variant="link"
+      >
+        {isOpen ? "Show less" : "Show more"}
+        <ChevronDown
+          className={cn("transition-transform duration-200", {
+            "rotate-180": isOpen,
+          })}
+        />
+      </Button>
     </div>
   );
 }

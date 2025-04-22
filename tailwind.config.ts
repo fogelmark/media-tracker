@@ -10,8 +10,7 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			background: 'var(--background)',
-  			foreground: 'var(--foreground)',
+  			background: 'hsl(215, 28%, 12%)',
   			acapulco: {
   				'50': '#f4f9f7',
   				'100': '#daede6',
@@ -25,7 +24,7 @@ export default {
   				'900': '#243d37',
   				'950': '#10231f'
   			},
-  			highlight: '#ffffff0d'
+  			highlight: '#ffffff0d',
   		},
   		boxShadow: {
   			'button-bezel': 'inset 0 1px 0 0 hsla(0, 0%, 100%, .1), inset 0 -1px 0 0 rgba(0, 0, 0, .25), 0 2px 6px 0 rgba(0, 0, 0, .1)'
