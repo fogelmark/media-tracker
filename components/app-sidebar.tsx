@@ -78,7 +78,7 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="dark:bg-gray-800">
-      <SidebarHeader>
+      <SidebarHeader className="h-16">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
