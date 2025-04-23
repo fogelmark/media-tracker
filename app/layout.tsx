@@ -1,7 +1,6 @@
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { BookDetailsContextProvider } from "@/context/book-details";
-import { Geist, Geist_Mono } from "next/font/google";
 import { inter } from "@/lib/fonts";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";

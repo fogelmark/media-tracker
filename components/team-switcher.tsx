@@ -3,6 +3,8 @@
 import * as React from "react";
 
 import { SidebarMenuButton } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import { bricolage } from "@/lib/fonts";
 
 export function TeamSwitcher({
   teams,
@@ -27,8 +29,8 @@ export function TeamSwitcher({
       <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
         <activeTeam.logo className="size-4" />
       </div>
-      <div className="grid flex-1 text-left text-sm leading-tight">
-        <span className="truncate font-semibold">{activeTeam.name}</span>
+      <div className="grid flex-1 text-left leading-tight">
+        <span className={cn("truncate font-semibold", bricolage.className )}>{activeTeam.name}</span>
       </div>
     </SidebarMenuButton>
   );

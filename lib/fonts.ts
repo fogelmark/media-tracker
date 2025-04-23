@@ -1,4 +1,4 @@
-import { Inter, Montserrat } from "next/font/google";
+import { Bricolage_Grotesque, Inter, Montserrat } from "next/font/google";
 
 export const montserrat = Montserrat({
   weight: ["400", "500", "600", "700", "800"],
@@ -11,3 +11,9 @@ export const inter = Inter({
   subsets: ["latin"],
   style: ["italic", "normal"],
 });
+
+export const bricolage = Bricolage_Grotesque({
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  style: ["normal"],
+})
