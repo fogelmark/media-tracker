@@ -10,7 +10,7 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(215, 28%, 12%)',
+  			background: 'hsl(215, 28%, 10%)',
   			acapulco: {
   				'50': '#f4f9f7',
   				'100': '#daede6',

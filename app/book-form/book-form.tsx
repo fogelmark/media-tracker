@@ -7,13 +7,9 @@ import { Star, BookOpen, BookText, Clock } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Card,
   CardContent,
@@ -28,41 +24,15 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FormInput } from "./form-input";
+import { handleSubmit } from "./form-submit-handler";
+import { useToast } from "@/hooks/use-toast";
 import Cloudinary from "@/components/ui/cloudinary";
 import GenreSkeleton from "@/components/loaders/genre-skeleton";
-import { handleSubmit } from "./form-submit-handler";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-
-const formSchema = z
-  .object({
-    title: z.string().min(1, { message: "Title is required" }),
-    author: z.string().min(1, { message: "Author is required" }),
-    pages: z.string().min(1, { message: "Pages is required" }),
-    first_published: z.string().min(1, {
-      message: "First publication year is required",
-    }),
-    language: z.enum(["English", "Swedish"]),
-    status: z.enum(["Want to Read", "In Progress", "Completed"]),
-    rating: z.number().nullable().optional(),
-    notes: z.string().optional(),
-    cover_id: z.string().optional(),
-    genre: z
-      .array(z.string().min(1))
-      .min(1, { message: "At least one genre is required" }),
-  })
-  .superRefine((data, ctx) => {
-    if (data.status === "Completed" && (!data.rating || data.rating < 1)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Rating is required when status is 'Completed'",
-        path: ["rating"],
-      });
-    }
-  });
+import { formSchema, FormSchemaType } from "./form-schema";
+import ReadingLanguage from "./reading-language";
 
 export default function BookForm({
   genres,
@@ -129,10 +99,10 @@ export default function BookForm({
   }, [status, form]);
 
   return (
-    <div className=" text-gray-300 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl bg-gray-800 border-gray-700">
+    <div className=" text-gray-200 flex items-center justify-center p-4">
+      <Card className="w-full max-w-4xl border-gray-700">
         <CardHeader className="border-b border-gray-700">
-          <CardTitle className="text-2xl flex items-center gap-2 text-gray-300">
+          <CardTitle className="text-2xl flex items-center gap-2 text-gray-200">
             <BookText className="h-6 w-6" />
             <h1>Add a book</h1>
           </CardTitle>
@@ -159,116 +129,35 @@ export default function BookForm({
                 <TabsContent value="book details" className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-6">
-                      <FormField
-                        control={form.control}
+                      <FormInput<FormSchemaType>
                         name="title"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Title"
-                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-red-400" />
-                          </FormItem>
-                        )}
+                        control={form.control}
+                        placeholder="Title"
+                        className="bg-gray-700/60 border dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300"
                       />
 
-                      <FormField
-                        control={form.control}
+                      <FormInput<FormSchemaType>
                         name="author"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Author"
-                                className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300"
-                              />
-                            </FormControl>
-                            <FormMessage className="text-red-400" />
-                          </FormItem>
-                        )}
+                        control={form.control}
+                        placeholder="Author"
+                        className="bg-gray-700/60 border dark:dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300"
                       />
 
                       <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
+                        <FormInput<FormSchemaType>
                           name="pages"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  type="string"
-                                  placeholder="Pages"
-                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                                />
-                              </FormControl>
-                              <FormMessage className="text-red-400" />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
                           control={form.control}
+                          placeholder="Pages"
+                          className="bg-gray-700/60 border dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                        />
+                        <FormInput<FormSchemaType>
                           name="first_published"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  type="string"
-                                  placeholder="First Published Year"
-                                  className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                                />
-                              </FormControl>
-                              <FormMessage className="text-red-400" />
-                            </FormItem>
-                          )}
+                          control={form.control}
+                          placeholder="First Published Year"
+                          className="bg-gray-700/60 border dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         />
                       </div>
-                      <FormField
-                        control={form.control}
-                        name="language"
-                        render={({ field }) => (
-                          <FormItem className="space-y-2">
-                            <FormControl>
-                              <RadioGroup
-                                onValueChange={field.onChange}
-                                defaultValue="Swedish"
-                              >
-                                <div className="flex items-center w-fit cursor-pointer space-x-2">
-                                  <RadioGroupItem
-                                    value="Swedish"
-                                    id="Swedish"
-                                  />
-                                  <Label
-                                    htmlFor="Swedish"
-                                    className="cursor-pointer text-sm font-semibold"
-                                  >
-                                    Swedish
-                                  </Label>
-                                </div>
-                                <div className="flex items-center w-fit cursor-pointer space-x-2">
-                                  <RadioGroupItem
-                                    value="English"
-                                    id="English"
-                                  />
-                                  <Label
-                                    htmlFor="English"
-                                    className="cursor-pointer text-sm font-semibold"
-                                  >
-                                    English
-                                  </Label>
-                                </div>
-                              </RadioGroup>
-                            </FormControl>
-                            <FormMessage className="text-red-400" />
-                          </FormItem>
-                        )}
-                      />
+                      <ReadingLanguage control={form.control} />
                     </div>
 
                     <FormField
@@ -288,16 +177,13 @@ export default function BookForm({
                       name="status"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          {/* <FormLabel className="text-sm font-semibold text-gray-300">
-                            Reading Status
-                          </FormLabel> */}
                           <div className="grid grid-cols-3 gap-4">
                             <Button
                               type="button"
                               variant="default"
                               className={`border-gray-600 bg-gray-700 font-semibold ${
                                 field.value === "Want to Read"
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
+                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-200"
                                   : ""
                               }`}
                               onClick={() =>
@@ -311,7 +197,7 @@ export default function BookForm({
                               variant="default"
                               className={`border-gray-600 bg-gray-700 font-semibold ${
                                 field.value === "In Progress"
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
+                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-200"
                                   : ""
                               }`}
                               onClick={() =>
@@ -325,7 +211,7 @@ export default function BookForm({
                               variant="default"
                               className={`border-gray-600 bg-gray-700 font-semibold ${
                                 field.value === "Completed"
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-300"
+                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-200"
                                   : ""
                               }`}
                               onClick={() =>
@@ -380,7 +266,7 @@ export default function BookForm({
                       name="notes"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          {/* <FormLabel className="text-sm font-medium text-gray-300">
+                          {/* <FormLabel className="text-sm font-medium text-gray-200">
                             Reading Notes (Optional)
                           </FormLabel> */}
                           <FormControl>
@@ -412,7 +298,7 @@ export default function BookForm({
 
                       return (
                         <FormItem>
-                          {/* <FormLabel className="text-sm font-medium text-gray-300">
+                          {/* <FormLabel className="text-sm font-medium text-gray-200">
                             Select Genres (Multiple)
                           </FormLabel> */}
 
