@@ -34,6 +34,7 @@ const bookSchema: Schema<Book> = new mongoose.Schema({
   },
   cover_id: {
     type: String,
+    required: true,
   },
   slug: {
     type: String,

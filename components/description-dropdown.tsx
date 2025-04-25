@@ -37,7 +37,7 @@ export default function DescriptionDropdown({
       </div>
       <Button
         onClick={handleToggle}
-        className="p-0 h-9 flex text-gray-300"
+        className="p-0 h-9 flex text-neutral-200"
         variant="link"
       >
         {isOpen ? "Show less" : "Show more"}

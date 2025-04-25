@@ -14,7 +14,7 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
   return (
     <FormItem>
       <FormControl>
-        <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-600 rounded-lg p-6 h-[300px] bg-gray-700/50">
+        <div className="flex relative flex-col items-center justify-center border-2 border-dashed border-ash-highlight rounded-lg p-6 h-[300px] bg-ash-field">
           {field.value ? (
             <div className="relative w-full">
               <div className="w-[150px] relative justify-self-center rounded overflow-hidden h-auto aspect-[2/3]">
@@ -41,10 +41,10 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 mb-4 rounded-full bg-gray-600 flex items-center justify-center">
-                <Upload className="h-6 w-6 text-gray-300" />
+              <div className="w-16 h-16 mb-4 rounded-full bg-ash-highlight flex items-center justify-center">
+                <Upload className="h-6 w-6 text-neutral-200" />
               </div>
-              <p className="text-xs text-gray-400 mb-4">
+              <p className="text-xs text-neutral-400 mb-4">
                 PNG, JPG or GIF up to 5MB
               </p>
               <CldUploadWidget
@@ -59,7 +59,7 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
                 {({ open }) => (
                   <button
                     type="button"
-                    className="px-4 py-2 flex gap-2 justify-center font-semibold text-sm items-center bg-gradient-to-b shadow-sm from-acapulco-500 to-acapulco-600 max-w-[250px] rounded-md"
+                    className="px-4 py-2 shadow-ash flex gap-2 justify-center font-semibold text-sm items-center bg-gradient-to-b hover:from-acapulco-800 hover:to-acapulco-900 from-acapulco-700 to-acapulco-800 max-w-[250px] rounded-md"
                     onClick={() => open()}
                   >
                     <CloudUpload />
@@ -69,9 +69,9 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
               </CldUploadWidget>
             </div>
           )}
+          <FormMessage className="dark:text-[#dc5a5a] absolute bottom-7" />
         </div>
       </FormControl>
-      <FormMessage className="text-red-400" />
     </FormItem>
   );
 }

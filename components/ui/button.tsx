@@ -9,8 +9,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        submit: "shadow-ash hover:from-acapulco-800 hover:to-acapulco-900",
         default:
-          "shadow",
+          "shadow-ash dark:hover:bg-ash-hover",
         destructive:
           "bg-red-500 text-neutral-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90",
         outline:

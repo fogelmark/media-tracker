@@ -3,6 +3,7 @@ import {
   FormItem,
   FormControl,
   FormMessage,
+  FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Control, FieldValues, Path } from "react-hook-form";
@@ -27,7 +28,10 @@ export function FormInput<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="min-h-[65px]">
+          {/* <FormLabel className="text-sm font-semibold text-neutral-200">
+            Your Rating
+          </FormLabel> */}
           <FormControl>
             <Input
               {...field}

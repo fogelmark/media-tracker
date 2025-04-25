@@ -24,6 +24,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { FormInput } from "./form-input";
@@ -99,10 +100,10 @@ export default function BookForm({
   }, [status, form]);
 
   return (
-    <div className=" text-gray-200 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl border-gray-700">
-        <CardHeader className="border-b border-gray-700">
-          <CardTitle className="text-2xl flex items-center gap-2 text-gray-200">
+    <div className="text-neutral-200 flex items-center justify-center p-4">
+      <Card className="w-full max-w-4xl border-ash-highlight">
+        <CardHeader className="border-b dark:border-ash-highlight">
+          <CardTitle className="text-2xl flex items-center gap-2 text-neutral-200">
             <BookText className="h-6 w-6" />
             <h1>Add a book</h1>
           </CardTitle>
@@ -111,7 +112,7 @@ export default function BookForm({
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent className="p-6">
               <Tabs defaultValue="book details" className="space-y-6 w-full">
-                <TabsList>
+                <TabsList className="shadow-ash">
                   <TabsTrigger value="book details">
                     <BookText className="mr-2 h-4 w-4" />
                     book details
@@ -128,33 +129,33 @@ export default function BookForm({
 
                 <TabsContent value="book details" className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                       <FormInput<FormSchemaType>
                         name="title"
                         control={form.control}
-                        placeholder="Title"
-                        className="bg-gray-700/60 border dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300"
+                        placeholder={`"The Fellowship of the Ring"`}
+                        className="dark:bg-ash-field border-2 shadow-ash dark:border-ash-highlight/50 text-neutral-200 placeholder:text-gray-400 focus-visible:ring-gray-300"
                       />
 
                       <FormInput<FormSchemaType>
                         name="author"
                         control={form.control}
-                        placeholder="Author"
-                        className="bg-gray-700/60 border dark:dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300"
+                        placeholder={`"J.R.R. Tolkien"`}
+                        className="dark:bg-ash-field border-2 shadow-ash dark:dark:border-ash-highlight/50 text-neutral-200 placeholder:text-gray-400 focus-visible:ring-gray-300"
                       />
 
                       <div className="grid grid-cols-2 gap-4">
                         <FormInput<FormSchemaType>
                           name="pages"
                           control={form.control}
-                          placeholder="Pages"
-                          className="bg-gray-700/60 border dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          placeholder={`"432"`}
+                          className="dark:bg-ash-field border-2 shadow-ash dark:border-ash-highlight/50 text-neutral-200 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         />
                         <FormInput<FormSchemaType>
                           name="first_published"
                           control={form.control}
-                          placeholder="First Published Year"
-                          className="bg-gray-700/60 border dark:border-gray-600 text-gray-200 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          placeholder={`"July 29, 1954"`}
+                          className="dark:bg-ash-field border-2 shadow-ash dark:border-ash-highlight/50 text-neutral-200 placeholder:text-gray-400 focus-visible:ring-gray-300 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         />
                       </div>
                       <ReadingLanguage control={form.control} />
@@ -181,9 +182,9 @@ export default function BookForm({
                             <Button
                               type="button"
                               variant="default"
-                              className={`border-gray-600 bg-gray-700 font-semibold ${
+                              className={`bg-ash-field shadow-ash font-semibold ${
                                 field.value === "Want to Read"
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-200"
+                                  ? "bg-gradient-to-b from-acapulco-700 to-acapulco-800 text-neutral-200"
                                   : ""
                               }`}
                               onClick={() =>
@@ -195,9 +196,9 @@ export default function BookForm({
                             <Button
                               type="button"
                               variant="default"
-                              className={`border-gray-600 bg-gray-700 font-semibold ${
+                              className={`bg-ash-field shadow-ash font-semibold ${
                                 field.value === "In Progress"
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-200"
+                                  ? "bg-gradient-to-b from-acapulco-700 to-acapulco-800 text-neutral-200"
                                   : ""
                               }`}
                               onClick={() =>
@@ -209,9 +210,9 @@ export default function BookForm({
                             <Button
                               type="button"
                               variant="default"
-                              className={`border-gray-600 bg-gray-700 font-semibold ${
+                              className={`bg-ash-field shadow-ash font-semibold ${
                                 field.value === "Completed"
-                                  ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600 text-gray-200"
+                                  ? "bg-gradient-to-b from-acapulco-700 to-acapulco-800 text-neutral-200"
                                   : ""
                               }`}
                               onClick={() =>
@@ -232,7 +233,7 @@ export default function BookForm({
                       render={({ field }) => (
                         <FormItem className="space-y-3">
                           {/* <FormLabel className="text-sm font-medium text-slate-300">
-                            Your Rating
+                            Rating
                           </FormLabel> */}
                           <div className="flex w-fit">
                             {[1, 2, 3, 4, 5].map((star) => (
@@ -240,7 +241,7 @@ export default function BookForm({
                                 key={star}
                                 type="button"
                                 onClick={() => setRating(star)}
-                                className="focus:outline-none px-[1px] disabled:opacity-50"
+                                className="focus:outline-none px-[1px] disabled:opacity-30"
                                 disabled={status !== "Completed"}
                               >
                                 <Star
@@ -248,7 +249,7 @@ export default function BookForm({
                                   className={`h-8 w-8 ${
                                     (field.value ?? 0) >= star
                                       ? "fill-amber-500 text-amber-500"
-                                      : "text-amber-500"
+                                      : "text-neutral-600"
                                   }`}
                                 />
                               </button>
@@ -266,14 +267,14 @@ export default function BookForm({
                       name="notes"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          {/* <FormLabel className="text-sm font-medium text-gray-200">
+                          {/* <FormLabel className="text-sm font-medium text-neutral-200">
                             Reading Notes (Optional)
                           </FormLabel> */}
                           <FormControl>
                             <Textarea
                               {...field}
                               placeholder="Add your personal notes about this book (optional)"
-                              className="bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus-visible:ring-gray-300 min-h-[150px]"
+                              className="min-h-[150px]"
                             />
                           </FormControl>
                           <FormMessage className="text-red-400" />
@@ -298,7 +299,7 @@ export default function BookForm({
 
                       return (
                         <FormItem>
-                          {/* <FormLabel className="text-sm font-medium text-gray-200">
+                          {/* <FormLabel className="text-sm font-medium text-neutral-200">
                             Select Genres (Multiple)
                           </FormLabel> */}
 
@@ -309,8 +310,8 @@ export default function BookForm({
                                   key={genre._id}
                                   className={`cursor-pointer py-2 px-3 text-sm justify-center select-none ${
                                     field.value?.includes(genre._id)
-                                      ? "bg-gradient-to-b from-acapulco-500 to-acapulco-600"
-                                      : "bg-gray-700"
+                                      ? "bg-gradient-to-b from-acapulco-700 to-acapulco-800"
+                                      : "dark:bg-ash-field dark:text-neutral-200"
                                   }`}
                                   onClick={() => handleToggle(genre._id)}
                                 >
@@ -328,13 +329,14 @@ export default function BookForm({
                 </TabsContent>
               </Tabs>
             </CardContent>
-            <CardFooter className="flex border-t border-gray-700 p-6">
+            <CardFooter className="flex border-t border-ash-highlight p-6">
               <Button
                 type="submit"
+                variant="submit"
                 disabled={isSubmitting}
-                className="bg-gradient-to-b px-10 font-semibold from-acapulco-500 to-acapulco-600 text-gray-100 hover:bg-gradient-to-t hover:from-acapulco-600 hover:to-acapulco-500"
+                className="bg-gradient-to-b px-10 font-semibold from-acapulco-700 to-acapulco-800 text-neutral-200"
               >
-                Add Book
+                Submit
               </Button>
             </CardFooter>
           </form>

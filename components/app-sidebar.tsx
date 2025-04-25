@@ -2,26 +2,15 @@
 
 import {
   AudioWaveform,
-  Calendar,
   Command,
-  Home,
-  Inbox,
   Library,
-  Search,
-  Settings,
 } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavUser } from "./nav-user";
@@ -51,7 +40,7 @@ const data = {
 
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="icon" className="dark:bg-gray-800">
+    <Sidebar collapsible="icon" className="dark:bg-ash-surface">
       <SidebarHeader className="h-16">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>

@@ -76,7 +76,7 @@ export default async function Page() {
                   {book.genre.map((genre: Genre) => (
                     <div
                       key={genre._id}
-                      className="font-semibold gap-2 items-center inline-block bg-gradient-to-b from-acapulco-400 to-acapulco-500 leading-4 bg-clip-text text-transparent "
+                      className="font-semibold gap-2 items-center inline-block bg-gradient-to-b from-acapulco-700 to-acapulco-800 leading-4 bg-clip-text text-transparent "
                     >
                       {genre.name}
                     </div>
@@ -85,10 +85,10 @@ export default async function Page() {
               </div>
               {book.notes && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-300 mb-1">
+                  <h3 className="text-sm font-medium text-neutral-200 mb-1">
                     Notes
                   </h3>
-                  <div className="bg-gray-700/50 rounded-md p-3 text-gray-300 text-sm italic">
+                  <div className="bg-gray-700/50 rounded-md p-3 text-neutral-200 text-sm italic">
                     <p>{book.notes}</p>
                   </div>
                 </div>

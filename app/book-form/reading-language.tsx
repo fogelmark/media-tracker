@@ -16,7 +16,7 @@ export default function ReadingLanguage({ control }: ReadingLanguageProps) {
     name="language"
     render={({ field }) => (
       <FormItem className="space-y-2">
-        <FormLabel className="text-sm text-gray-300">
+        <FormLabel className="text-sm text-neutral-200">
           Reading language
         </FormLabel>
         <FormControl>

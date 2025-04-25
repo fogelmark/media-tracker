@@ -12,7 +12,7 @@ export const formSchema = z
     status: z.enum(["Want to Read", "In Progress", "Completed"]),
     rating: z.number().nullable().optional(),
     notes: z.string().optional(),
-    cover_id: z.string().optional(),
+    cover_id: z.string().min(1, { message: "A book cover must be uploaded" }),
     genre: z
       .array(z.string().min(1))
       .min(1, { message: "At least one genre is required" }),

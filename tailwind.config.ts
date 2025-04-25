@@ -24,10 +24,18 @@ export default {
   				'900': '#243d37',
   				'950': '#10231f'
   			},
+				ash: {
+					"background": "#121212",
+					"surface": "#222222",
+					"field": "#2C2C2C",
+					"highlight": "#3a3a3a",
+					"hover": "#2c2c2c50",
+				},
   			highlight: '#ffffff0d',
   		},
   		boxShadow: {
-  			'button-bezel': 'inset 0 1px 0 0 hsla(0, 0%, 100%, .1), inset 0 -1px 0 0 rgba(0, 0, 0, .25), 0 2px 6px 0 rgba(0, 0, 0, .1)'
+  			'button-bezel': 'inset 0 1px 0 0 hsla(0, 0%, 100%, .1), inset 0 -1px 0 0 rgba(0, 0, 0, .25), 0 2px 6px 0 rgba(0, 0, 0, .1)',
+				"ash": "0 2px 4px 0 rgba(0, 0, 0, .25)"
   		},
   		gridTemplateRows: {
   			'input-layout': 'auto auto 1rem'
