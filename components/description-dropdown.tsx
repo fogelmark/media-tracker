@@ -27,11 +27,11 @@ export default function DescriptionDropdown({
         })}
       >
         {!isOpen && (
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-800" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-ash-surface" />
         )}
         {description.split(/\n/).map((line: string, index: number) => (
           <div key={index}>
-            <p className="text-gray-400">{line}</p>
+            <p className="text-neutral-200">{line}</p>
           </div>
         ))}
       </div>

@@ -11,11 +11,11 @@ export default async function Page() {
   const books = await data.json();
 
   return (
-    <div className="flex max-sm:px-4 flex-col py-10 w-full gap-4 md:min-h-min items-center">
+    <div className="flex max-sm:px-4 flex-col py-10 w-full gap-20 md:min-h-min items-center">
       {books.map((book: Book) => (
         <Card
           key={book._id}
-          className="flex max-sm:flex-col w-full max-w-4xl border-t-[1px] border-highlight overflow-hidden"
+          className="flex max-sm:flex-col w-full max-w-4xl border-t-[2px] border-ash-field overflow-hidden"
         >
           <div className="p-6 pr-0">
             <div className="relative min-w-[200px] h-auto aspect-[2/3]">
@@ -33,7 +33,7 @@ export default async function Page() {
             <CardContent className="grid text-sm gap-4">
               <div className="flex flex-col items-center md:items-start">
                 <h2 className="text-3xl">{book.title}</h2>
-                <h3 className="text-xl">by {book.author}</h3>
+                <h3 className="text-xl text-neutral-400">by {book.author}</h3>
               </div>
               <div className="flex max-sm:justify-self-center gap-[1px]">
                 {Array.from({ length: 5 }, (_, i) => (
@@ -42,12 +42,12 @@ export default async function Page() {
                     className={`h-4 w-4 ${
                       i < book.rating
                         ? "fill-amber-500 text-amber-500"
-                        : "text-gray-500"
+                        : "text-neutral-600"
                     }`}
                   />
                 ))}
               </div>
-              <div className="flex max-sm:row-start-5 text-gray-400 flex-col md:flex-row md:items-center">
+              <div className="flex max-sm:row-start-5 text-neutral-400 flex-col md:flex-row md:items-center">
                 <div className="flex flex-col md:flex-row gap-1 md:gap-5">
                   <div className="flex gap-2 items-center">
                     <Languages className="size-4" />
@@ -76,7 +76,7 @@ export default async function Page() {
                   {book.genre.map((genre: Genre) => (
                     <div
                       key={genre._id}
-                      className="font-semibold gap-2 items-center inline-block bg-gradient-to-b from-acapulco-700 to-acapulco-800 leading-4 bg-clip-text text-transparent "
+                      className="font-semibold gap-2 items-center inline-block bg-gradient-to-b from-acapulco-400 to-acapulco-500 leading-4 bg-clip-text text-transparent"
                     >
                       {genre.name}
                     </div>
@@ -85,10 +85,10 @@ export default async function Page() {
               </div>
               {book.notes && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-neutral-200 mb-1">
+                  <h3 className="text-sm font-semibold text-neutral-200 mb-1">
                     Notes
                   </h3>
-                  <div className="bg-gray-700/50 rounded-md p-3 text-neutral-200 text-sm italic">
+                  <div className="bg-ash-field rounded-md p-3 text-neutral-200 text-sm italic">
                     <p>{book.notes}</p>
                   </div>
                 </div>
