@@ -13,6 +13,7 @@ export const formSchema = z
     rating: z.number().nullable().optional(),
     notes: z.string().optional(),
     cover_id: z.string().min(1, { message: "A book cover must be uploaded" }),
+    description: z.string().optional(),
     genre: z
       .array(z.string().min(1))
       .min(1, { message: "At least one genre is required" }),

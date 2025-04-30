@@ -52,6 +52,7 @@ export default function BookForm({
       status: "Want to Read",
       rating: null,
       notes: "",
+      description: "",
       cover_id: "",
       genre: [],
     },
@@ -97,6 +98,8 @@ export default function BookForm({
       form.clearErrors("rating");
     }
   }, [status, form]);
+
+  console.log(form.watch());
 
   return (
     <div className="text-neutral-200 flex items-center justify-center p-4">
@@ -167,7 +170,24 @@ export default function BookForm({
                         <Cloudinary field={field} form={form} />
                       )}
                     />
+                    
                   </div>
+                  <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              placeholder="Add a description of the book (optional)"
+                              className="min-h-[150px]"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-400" />
+                        </FormItem>
+                      )}
+                    />
                 </TabsContent>
 
                 <TabsContent value="reading status" className="space-y-6">

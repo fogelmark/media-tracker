@@ -5,6 +5,7 @@ import { BookOpenText, Calendar, Languages, Star } from "lucide-react";
 import Image from "next/image";
 import { getCldImageUrl } from "next-cloudinary";
 import DescriptionDropdown from "@/components/description-dropdown";
+import { cn } from "@/lib/utils";
 
 export default async function Page() {
   const data = await fetch("http://localhost:3000/api/books/");
@@ -39,11 +40,9 @@ export default async function Page() {
                 {Array.from({ length: 5 }, (_, i) => (
                   <Star
                     key={i}
-                    className={`h-4 w-4 ${
-                      i < book.rating
-                        ? "fill-amber-500 text-amber-500"
-                        : "text-neutral-600"
-                    }`}
+                    className={cn("h-4 w-4 text-neutral-600", {
+                      "fill-amber-500 text-amber-500": i < book.rating,
+                    })}
                   />
                 ))}
               </div>
@@ -61,9 +60,7 @@ export default async function Page() {
                   </div>
                   <div className="flex gap-2 items-center">
                     <Calendar className="size-4" />
-                    <p>
-                      First published {book.first_published}
-                    </p>
+                    <p>First published {book.first_published}</p>
                   </div>
                 </div>
               </div>

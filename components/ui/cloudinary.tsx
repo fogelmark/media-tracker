@@ -14,6 +14,7 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
   return (
     <FormItem>
       <FormControl>
+        <div className="space-y-2 min-h-[330px]">
         <div className="flex relative flex-col items-center justify-center border-2 border-dashed border-ash-highlight rounded-lg p-6 h-[300px] bg-ash-field">
           {field.value ? (
             <div className="relative w-full">
@@ -52,7 +53,9 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
                 onSuccess={(result: any) => {
                   const info = result?.info;
                   if (info) {
-                    form.setValue("cover_id", info.public_id);
+                    form.setValue("cover_id", info.public_id, { shouldValidate: true });
+                    // lazy fix for overflow: hidden on body after closed widget - investigate...later
+                    document.body.style.overflow = "auto";
                   }
                 }}
               >
@@ -69,7 +72,8 @@ export default function Cloudinary({ field, form }: CloudinaryProps) {
               </CldUploadWidget>
             </div>
           )}
-          <FormMessage className="dark:text-[#dc5a5a] absolute bottom-7" />
+        </div>
+          <FormMessage className="dark:text-[#dc5a5a]" />
         </div>
       </FormControl>
     </FormItem>

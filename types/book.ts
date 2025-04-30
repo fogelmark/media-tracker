@@ -3,6 +3,8 @@ export interface Book {
   title: string;
   author: string;
   cover_id: string;
+  description: string;
+  notes: string;
   pages: number | string;
   first_published: number | string;
   status: string;
