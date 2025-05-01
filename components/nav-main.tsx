@@ -1,6 +1,7 @@
 import React from 'react'
 import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from './ui/sidebar'
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import { Home, Library, SquarePen } from 'lucide-react';
+import Link from 'next/link';
 
 export default function NavMain() {
   return (
@@ -11,10 +12,10 @@ export default function NavMain() {
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
-                <span>{item.title}</span>
-              </a>
+                <span className='group-hover/menu-button:translate-x-1 transition duration-150'>{item.title}</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
@@ -27,17 +28,17 @@ export default function NavMain() {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Library",
+    url: "/library",
+    icon: Library,
   },
   {
     title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    url: "/forms",
+    icon: SquarePen,
   },
 ];

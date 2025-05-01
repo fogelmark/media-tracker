@@ -9,7 +9,7 @@ export function NavUser() {
   return (
     <SidebarMenuButton
       size="lg"
-      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+      className="data-[state=open]:bg-sidebar-accent cursor-default data-[state=open]:text-sidebar-accent-foreground"
     >
       <Avatar className="size-8 rounded-full">
         <AvatarImage src={avatar.src} alt="Avatar" />

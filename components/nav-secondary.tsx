@@ -44,7 +44,7 @@ export default function NavSecondary({ ...props }) {
               <SidebarMenuButton asChild>
                 <a href={item.url}>
                   <item.icon />
-                  <span>{item.title}</span>
+                  <span className="group-hover/menu-button:translate-x-1 transition duration-150">{item.title}</span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
