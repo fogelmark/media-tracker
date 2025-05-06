@@ -50,17 +50,6 @@ export default function Header() {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        {/* <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href={pathname}>{"föregående sida"}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{"aktiv sida"}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb> */}
       </div>
     </header>
   );
