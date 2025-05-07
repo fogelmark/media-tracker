@@ -1,18 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Book, Genre } from "@/types";
 import { BookOpenText, Calendar, Languages, Star } from "lucide-react";
-import Image from "next/image";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { getCldImageUrl } from "next-cloudinary";
 import DescriptionDropdown from "@/components/description-dropdown";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default async function Page() {
   const data = await fetch("http://localhost:3000/api/books/");
   const books = await data.json();
 
   return (
-    <div className="flex max-sm:px-4 flex-col py-10 w-full gap-20 md:min-h-min items-center">
+    <div className="flex max-sm:px-4 px-8 flex-col py-10 w-full gap-20 md:min-h-min items-center">
       {books.map((book: Book) => (
         <Card
           key={book._id}
