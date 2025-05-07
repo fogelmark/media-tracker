@@ -13,6 +13,9 @@ const initialValues: Book = {
   rating: 0,
   language: "Swedish",
   genre: [],
+  _id: "",
+  description: "",
+  notes: ""
 };
 
 

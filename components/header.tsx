@@ -16,12 +16,8 @@ import React from "react";
 
 export default function Header() {
   const pathname = usePathname();
-
   const paths = pathname.split("/").filter(Boolean);
-  console.log(paths);
-
   const lastIndex = paths.length - 1;
-
   const { open } = useSidebar();
 
   return (
