@@ -11,7 +11,7 @@ export default async function Page() {
   const books = await data.json();
 
   return (
-    <div className="flex max-sm:px-4 px-8 flex-col py-10 w-full gap-20 md:min-h-min items-center">
+    <div className="flex max-sm:px-4 p-8 flex-col w-full gap-20 md:min-h-min items-center">
       {books.map((book: Book) => (
         <Card
           key={book._id}

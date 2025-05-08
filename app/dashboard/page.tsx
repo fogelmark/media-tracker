@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Page() {
-  return <div>Dashboard</div>;
+  return <div className="min-h-[calc(100vh-4rem)] p-8">Dashboard</div>;
 }
